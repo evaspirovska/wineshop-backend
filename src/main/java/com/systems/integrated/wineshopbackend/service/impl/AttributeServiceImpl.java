@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,14 @@ public class AttributeServiceImpl implements AttributeService {
     @Override
     public List<Attribute> findAll() {
         return attributeRepository.findAll();
+    }
+
+    @Override
+    public List<Attribute> findAttributesByCategoryId(Long id) {
+        categoryRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category with id " + id + " not found!"));
+        return attributeRepository.findAttributesByCategoryId(id);
     }
 
     @Override

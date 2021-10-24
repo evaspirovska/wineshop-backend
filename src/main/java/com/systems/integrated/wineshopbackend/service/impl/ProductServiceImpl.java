@@ -37,6 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(ProductDTO productDTO) {
+        //todo: if product image is empty, change path to default placeholder
         Category category = categoryRepository.findById(productDTO.getCategoryId())
                 .orElseThrow(() -> new EntityNotFoundException("Category with id " + productDTO.getCategoryId() + " not found!"));
         Product product = Product.builder()
