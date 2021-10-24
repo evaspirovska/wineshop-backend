@@ -8,6 +8,7 @@ import java.util.List;
 public interface AttributeService {
     Attribute findById(Long id);
     List<Attribute> findAll();
+    List<Attribute> findAttributesByCategoryId(Long id);
     Attribute create(AttributeDTO attributeDTO);
     Attribute update(Long id, AttributeDTO attributeDTO);
     void delete(Long id);
