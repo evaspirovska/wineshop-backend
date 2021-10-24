@@ -6,20 +6,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Map;
 
-/*
- * TODO: Marko ova smisli go ti kako da bide, dali product da bide entitet ili samo nekoja abstraktna klasa bidejki
- *  Wine, Glass i site drugi proizvodi ke treba da nasleduvaat od ovaa klasa
- */
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Table(name = "Products")
+@Embeddable
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
+    private Category category;
+    private String productTitle;
+    @Column(length = 4096)
+    private String productDescriptionHTML;
+    private Double priceInMKD;
+    private String pathToMainProductIMG;
+    @ElementCollection
+    private List<String> pathsToProductIMGs;
+    @ElementCollection
+    private Map<Attribute, String> valueForProductAttribute;
 }
