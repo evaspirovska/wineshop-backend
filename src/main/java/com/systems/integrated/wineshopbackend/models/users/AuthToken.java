@@ -13,26 +13,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "Users")
-public class User {
+@Table(name = "AuthTokens")
+public class AuthToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String email;
+    @ManyToOne
+    private User user;
 
-    @Column(unique = true)
-    private String username;
+    private String token;
 
-    private String password;
-
-    private String name;
-
-    private String surname;
-
-    private Role role;
+    private String type;
 
     private LocalDateTime dateCreated;
+
+    private LocalDateTime dateExpires;
 }

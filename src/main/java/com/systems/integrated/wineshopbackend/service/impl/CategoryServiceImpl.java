@@ -7,13 +7,15 @@ import com.systems.integrated.wineshopbackend.repository.CategoryJPARepository;
 import com.systems.integrated.wineshopbackend.service.intef.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryJPARepository categoryRepository;
@@ -35,6 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .name(categoryDTO.getName())
                 .attributes(new LinkedList<>())
                 .products(new LinkedList<>())
+                .dateCreated(LocalDateTime.now())
                 .build();
         return categoryRepository.save(category);
     }

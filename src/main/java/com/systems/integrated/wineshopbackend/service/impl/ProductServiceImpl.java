@@ -10,7 +10,9 @@ import com.systems.integrated.wineshopbackend.repository.ProductJPARepository;
 import com.systems.integrated.wineshopbackend.service.intef.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private final ProductJPARepository productRepository;
@@ -47,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
                 .priceInMKD(productDTO.getPriceInMKD())
                 .pathsToProductIMGs(new LinkedList<>())
                 .valueForProductAttribute(new HashMap<>())
+                .dateCreated(LocalDateTime.now())
                 .build();
         //gi zemam site atributi od kategorijata i gi inicijaliziram na prazen string, korisnikot treba da stava vrednosti
         category.getAttributes().forEach(attribute -> product.getValueForProductAttribute().put(attribute, ""));

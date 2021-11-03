@@ -10,12 +10,14 @@ import com.systems.integrated.wineshopbackend.service.intef.AttributeService;
 import com.systems.integrated.wineshopbackend.service.intef.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AttributeServiceImpl implements AttributeService {
 
     private final AttributeJPARepository attributeRepository;
@@ -50,6 +52,7 @@ public class AttributeServiceImpl implements AttributeService {
                 .category(category)
                 .name(attributeDTO.getName())
                 .suffix(attributeDTO.getSuffix())
+                .dateCreated(LocalDateTime.now())
                 .build();
         Attribute savedAttribute = attributeRepository.save(newAttribute);
         productService.updateProductAttributesForCategoryId(category.getId());

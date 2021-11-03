@@ -37,13 +37,13 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<?> filterProducts(@RequestParam MultiValueMap<String, String> filters){
-        //todo
-        //filters.get("filter").forEach(System.out::println);
-        //http://localhost:8080/api/products/?filter=key:value,key2:value2,key3:value3
-        return null;
-    }
+//    @GetMapping
+//    public ResponseEntity<?> filterProducts(@RequestParam MultiValueMap<String, String> filters){
+//        //todo
+//        //filters.get("filter").forEach(System.out::println);
+//        //http://localhost:8080/api/products/?filter=key:value,key2:value2,key3:value3
+//        return null;
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createNewProduct(@RequestBody ProductDTO productDTO){
