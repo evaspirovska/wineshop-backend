@@ -19,7 +19,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -35,7 +35,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody @Validated UserDTO userDTO) throws MessagingException {
         User user = userService.createUser(userDTO);
         return new ResponseEntity<>(user, HttpStatus.CREATED);

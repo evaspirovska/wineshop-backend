@@ -26,7 +26,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserJPARepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder encoder;
     private final EmailService emailService;
     private final AuthTokenService authTokenService;
 
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .email(userDTO.getEmail())
                 .username(userDTO.getUsername())
-                .password(bCryptPasswordEncoder.encode(newPassword))
+                .password(encoder.encode(newPassword))
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
                 .role(userDTO.getRole())
@@ -95,8 +95,31 @@ public class UserServiceImpl implements UserService {
 
         AuthToken authToken = authTokenService.createAuthToken(user.getId(), "CREATE_USER");
 
-        emailService.sendEmail(CREATE_USER_SUBJECT, user.getEmail(),
-                String.format(CREATE_USER_CONTENT, user.getUsername(), url, authToken.getToken()));
+//        emailService.sendEmail(CREATE_USER_SUBJECT, user.getEmail(),
+//                String.format(CREATE_USER_CONTENT, user.getUsername(), url, authToken.getToken()));
+        return user;
+    }
+
+    @Override
+    public User register(UserDTO userDTO) {
+        if (userRepository.existsUserByUsername(userDTO.getUsername())) {
+            throw new RuntimeException(String.format("User with this username: %s already exists", userDTO.getUsername()));
+        }
+        if (userRepository.existsUserByEmail(userDTO.getEmail())) {
+            throw new RuntimeException(String.format("User with this email: %s already exists", userDTO.getEmail()));
+        }
+
+        User user = User.builder()
+                .email(userDTO.getEmail())
+                .username(userDTO.getUsername())
+                .password(encoder.encode(userDTO.getPassword()))
+                .name(userDTO.getName())
+                .surname(userDTO.getSurname())
+                .role(userDTO.getRole())
+                .dateCreated(LocalDateTime.now())
+                .build();
+
+        userRepository.save(user);
         return user;
     }
 
@@ -117,7 +140,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User changeUserPassword(User user, String newPassword) {
-        String encodedPassword = bCryptPasswordEncoder.encode(newPassword);
+        String encodedPassword = encoder.encode(newPassword);
         user.setPassword(encodedPassword);
         userRepository.save(user);
 

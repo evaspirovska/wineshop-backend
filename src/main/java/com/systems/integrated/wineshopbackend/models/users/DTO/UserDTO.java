@@ -22,8 +22,6 @@ public class UserDTO {
     @NotBlank
     private final String username;
 
-    @NotNull
-    @NotBlank
     private final String password;
 
     @NotNull

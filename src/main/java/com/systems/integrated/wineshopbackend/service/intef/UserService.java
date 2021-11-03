@@ -16,6 +16,8 @@ public interface UserService {
 
     User createUser(UserDTO newUser) throws MessagingException;
 
+    User register(UserDTO newUser);
+
     User updateUser(UserDTO userDTO);
 
     User changeUserPassword (User User, String newPassword);

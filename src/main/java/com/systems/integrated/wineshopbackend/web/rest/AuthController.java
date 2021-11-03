@@ -4,6 +4,7 @@ import com.systems.integrated.wineshopbackend.models.users.AuthToken;
 import com.systems.integrated.wineshopbackend.models.users.DTO.JwtResponseDTO;
 import com.systems.integrated.wineshopbackend.models.users.DTO.LoginDTO;
 import com.systems.integrated.wineshopbackend.models.users.DTO.UserDTO;
+import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.security.JwtUtils;
 import com.systems.integrated.wineshopbackend.service.impl.UserDetailsImpl;
 import com.systems.integrated.wineshopbackend.service.intef.AuthTokenService;
@@ -18,7 +19,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -36,7 +36,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDto) {
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
 
@@ -57,8 +56,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO) throws MessagingException {
-        userService.createUser(userDTO);
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO) {
+        userService.register(userDTO);
 
         return ResponseEntity.ok("User registered successfully!");
     }
