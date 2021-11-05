@@ -7,9 +7,14 @@ import java.util.List;
 
 public interface ProductService {
     Product findById(Long id);
+
     List<Product> findAll();
+
     Product create(ProductDTO productDTO);
+
     Product update(Long id, ProductDTO productDTO);
+
     void delete(Long id);
+
     void updateProductAttributesForCategoryId(Long categoryId);
 }

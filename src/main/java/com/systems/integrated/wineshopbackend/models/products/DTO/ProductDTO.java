@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -13,12 +14,18 @@ public class ProductDTO {
     @NotNull
     @NotEmpty
     private final Long categoryId;
+
     @NotNull
     @NotEmpty
     private final String productTitle;
+
     private final String productDescriptionHTML;
+
     @NotNull
     @NotEmpty
     private final Double priceInMKD;
+
     private final Map<Long, String> attributeIdAndValueMap;
+
+    private final LocalDateTime dateCreated;
 }
