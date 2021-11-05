@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException(String.format("User with email: %s not found", email)));;
+                () -> new EntityNotFoundException(String.format("User with email: %s not found", email)));
         return user;
     }
 
@@ -95,8 +95,8 @@ public class UserServiceImpl implements UserService {
 
         AuthToken authToken = authTokenService.createAuthToken(user.getId(), "CREATE_USER");
 
-//        emailService.sendEmail(CREATE_USER_SUBJECT, user.getEmail(),
-//                String.format(CREATE_USER_CONTENT, user.getUsername(), url, authToken.getToken()));
+        emailService.sendEmail(CREATE_USER_SUBJECT, user.getEmail(),
+                String.format(CREATE_USER_CONTENT, user.getUsername(), url, authToken.getToken()));
         return user;
     }
 
