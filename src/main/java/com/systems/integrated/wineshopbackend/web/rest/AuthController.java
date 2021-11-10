@@ -50,6 +50,8 @@ public class AuthController {
 
         return ResponseEntity.ok(new JwtResponseDTO(userDetails.getId(),
                 userDetails.getUsername(),
+                userDetails.getName(),
+                userDetails.getSurname(),
                 userDetails.getEmail(),
                 jwt,
                 role));
