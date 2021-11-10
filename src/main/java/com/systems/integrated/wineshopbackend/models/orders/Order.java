@@ -38,6 +38,6 @@ public class Order {
         this.user = user;
         this.productsInOrder = new ArrayList<>();
         this.dateCreated = LocalDateTime.now();
-        this.orderStatus = OrderStatus.RECIEVED;
+        this.orderStatus = OrderStatus.CREATED;
     }
 }

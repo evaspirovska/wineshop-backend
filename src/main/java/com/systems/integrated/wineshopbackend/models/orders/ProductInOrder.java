@@ -38,7 +38,7 @@ public class ProductInOrder {
         this.dateCreated = LocalDateTime.now();
     }
 
-    public Double calculatePrice() {
-        return quantity * product.getPriceInMKD();
-    }
+//    public Double calculatePrice() {
+//        return quantity * product.getPriceInMKD();
+//    }
 }
