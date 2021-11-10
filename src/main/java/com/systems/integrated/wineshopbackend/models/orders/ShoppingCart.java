@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,4 +31,13 @@ public class ShoppingCart {
     private List<ProductInShoppingCart> productsInShoppingCart;
 
     private LocalDateTime dateCreated;
+
+//    private Double totalPrice;
+
+    public ShoppingCart(User user) {
+        this.user = user;
+        this.productsInShoppingCart = new ArrayList<>();
+        this.dateCreated = LocalDateTime.now();
+//        this.totalPrice = 0.0;
+    }
 }

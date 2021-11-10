@@ -21,4 +21,8 @@ public class Discount {
     private Long id;
 
     private LocalDateTime dateCreated;
+
+    private int discountPercent;
+
+
 }
