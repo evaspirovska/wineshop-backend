@@ -16,7 +16,7 @@ public interface UserService {
 
     User createUser(UserDTO newUser) throws MessagingException;
 
-    User register(UserDTO newUser);
+    User signUp(UserDTO newUser);
 
     User updateUser(UserDTO userDTO);
 

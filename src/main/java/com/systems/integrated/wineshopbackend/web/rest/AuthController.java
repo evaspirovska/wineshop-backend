@@ -2,7 +2,7 @@ package com.systems.integrated.wineshopbackend.web.rest;
 
 import com.systems.integrated.wineshopbackend.models.users.AuthToken;
 import com.systems.integrated.wineshopbackend.models.users.DTO.JwtResponseDTO;
-import com.systems.integrated.wineshopbackend.models.users.DTO.LoginDTO;
+import com.systems.integrated.wineshopbackend.models.users.DTO.SignInDTO;
 import com.systems.integrated.wineshopbackend.models.users.DTO.UserDTO;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.security.JwtUtils;
@@ -34,10 +34,10 @@ public class AuthController {
     private final JwtUtils jwtUtils;
     private final AuthTokenService authTokenService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDto) {
+    @PostMapping("/signin")
+    public ResponseEntity<?> signIn(@Valid @RequestBody SignInDTO signInDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+                new UsernamePasswordAuthenticationToken(signInDto.getUsername(), signInDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
@@ -55,11 +55,15 @@ public class AuthController {
                 role));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO) {
-        userService.register(userDTO);
-
-        return ResponseEntity.ok("User registered successfully!");
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUp(@Valid @RequestBody UserDTO userDTO) {
+        User user;
+        try {
+            user = userService.signUp(userDTO);
+        } catch (RuntimeException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("authenticateToken/{token}")
