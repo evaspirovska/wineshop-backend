@@ -9,7 +9,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Getter
 public class CategoryDTO {
+    private Long id;
     @NotNull
     @NotEmpty
     private final String name;
+
+    public void setId(Long id){
+        this.id=id;
+    }
 }

@@ -40,8 +40,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category update(Long id, CategoryDTO categoryDTO) {
-        Category category = findById(id);
+    public Category update(CategoryDTO categoryDTO) {
+        Category category = findById(categoryDTO.getId());
         category.setName(categoryDTO.getName());
         return categoryRepository.save(category);
     }

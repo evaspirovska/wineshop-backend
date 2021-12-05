@@ -10,6 +10,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Getter
 public class ProductDTO {
+    private Long id;
     @NotNull
     @NotEmpty
     private final Long categoryId;
@@ -21,4 +22,8 @@ public class ProductDTO {
     @NotEmpty
     private final Double priceInMKD;
     private final Map<Long, String> attributeIdAndValueMap;
+
+    public void setId(Long id){
+        this.id=id;
+    }
 }

@@ -1,5 +1,6 @@
 package com.systems.integrated.wineshopbackend.models.products;
 
+import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,13 +11,15 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "Products")
+@Table
 @Embeddable
 public class Product {
 
@@ -39,4 +42,13 @@ public class Product {
     private List<String> pathsToProductIMGs;
     @ElementCollection
     private Map<Attribute, String> valueForProductAttribute;
+
+    public static ProductDTO convertToDTO(Product product){
+        TreeMap<Long, String> attributeValueMap = new TreeMap<>();
+        product.getValueForProductAttribute().forEach((key, value) -> attributeValueMap.put(key.getId(), value));
+        return new ProductDTO(product.getId(), product.getCategory().getId(),
+                product.getProductTitle(), product.getProductDescriptionHTML(),
+                product.getPriceInMKD(),
+                attributeValueMap);
+    }
 }

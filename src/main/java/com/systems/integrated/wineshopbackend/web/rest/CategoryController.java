@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,12 +30,12 @@ public class CategoryController {
         catch (EntityNotFoundException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(category, HttpStatus.OK);
+        return new ResponseEntity<>(Category.convertToDTO(category), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllCategories(){
-        List<Category> categories = categoryService.findAll();
+        List<CategoryDTO> categories = categoryService.findAll().stream().map(Category::convertToDTO).collect(Collectors.toList());
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
@@ -47,19 +48,19 @@ public class CategoryController {
         catch (IllegalArgumentException ex){
             return new ResponseEntity<>(ex.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(category, HttpStatus.OK);
+        return new ResponseEntity<>(Category.convertToDTO(category), HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO){
+    @PutMapping("/update")
+    public ResponseEntity<?> updateCategory(@RequestBody CategoryDTO categoryDTO){
         Category category;
         try{
-            category = categoryService.update(id, categoryDTO);
+            category = categoryService.update(categoryDTO);
         }
         catch (IllegalArgumentException ex){
             return new ResponseEntity<>(ex.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(category, HttpStatus.OK);
+        return new ResponseEntity<>(Category.convertToDTO(category), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

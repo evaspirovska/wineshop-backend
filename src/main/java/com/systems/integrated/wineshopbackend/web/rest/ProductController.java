@@ -11,6 +11,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,22 +29,22 @@ public class ProductController {
         catch (EntityNotFoundException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(Product.convertToDTO(product), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllProducts(){
-        List<Product> products = productService.findAll();
+        List<ProductDTO> products = productService.findAll().stream().map(Product::convertToDTO).collect(Collectors.toList());
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<?> filterProducts(@RequestParam MultiValueMap<String, String> filters){
-        //todo
-        //filters.get("filter").forEach(System.out::println);
-        //http://localhost:8080/api/products/?filter=key:value,key2:value2,key3:value3
-        return null;
-    }
+//    @GetMapping
+//    public ResponseEntity<?> filterProducts(@RequestParam MultiValueMap<String, String> filters){
+//        //todo
+//        //filters.get("filter").forEach(System.out::println);
+//        //http://localhost:8080/api/products/?filter=key:value,key2:value2,key3:value3
+//        return null;
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createNewProduct(@RequestBody ProductDTO productDTO){
@@ -54,19 +55,19 @@ public class ProductController {
         catch (IllegalArgumentException ex){
             return new ResponseEntity<>(ex.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(Product.convertToDTO(product), HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProduct(@RequestBody ProductDTO productDTO){
         Product product;
         try{
-            product = productService.update(id, productDTO);
+            product = productService.update(productDTO);
         }
         catch (IllegalArgumentException ex){
             return new ResponseEntity<>(ex.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(Product.convertToDTO(product), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

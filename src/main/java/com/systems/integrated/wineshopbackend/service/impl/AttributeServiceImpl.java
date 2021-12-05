@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +49,7 @@ public class AttributeServiceImpl implements AttributeService {
                 .category(category)
                 .name(attributeDTO.getName())
                 .suffix(attributeDTO.getSuffix())
+                .isNumeric(attributeDTO.isNumeric())
                 .build();
         Attribute savedAttribute = attributeRepository.save(newAttribute);
         productService.updateProductAttributesForCategoryId(category.getId());
@@ -57,13 +57,14 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
     @Override
-    public Attribute update(Long id, AttributeDTO attributeDTO) {
+    public Attribute update(AttributeDTO attributeDTO) {
         Category category = categoryRepository
                 .findById(attributeDTO.getCategoryId())
                 .orElseThrow(() -> new EntityNotFoundException("Category with id " + attributeDTO.getCategoryId() + " not found!"));
-        Attribute attribute = findById(id);
+        Attribute attribute = findById(attributeDTO.getId());
         attribute.setName(attributeDTO.getName());
         attribute.setSuffix(attributeDTO.getSuffix());
+        attribute.setNumeric(attributeDTO.isNumeric());
         attribute.setCategory(category);
         Attribute updatedAttribute = attributeRepository.save(attribute);
         productService.updateProductAttributesForCategoryId(category.getId());
