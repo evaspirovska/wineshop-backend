@@ -1,12 +1,14 @@
 package com.systems.integrated.wineshopbackend.service.impl;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
+import com.systems.integrated.wineshopbackend.models.exceptions.IllegalAttributeValueException;
 import com.systems.integrated.wineshopbackend.models.products.Attribute;
 import com.systems.integrated.wineshopbackend.models.products.Category;
 import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.repository.CategoryJPARepository;
 import com.systems.integrated.wineshopbackend.repository.ProductJPARepository;
+import com.systems.integrated.wineshopbackend.service.intef.AttributeService;
 import com.systems.integrated.wineshopbackend.service.intef.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductJPARepository productRepository;
     private final CategoryJPARepository categoryRepository;
+    private final AttributeService attributeService;
 
 
     @Override
@@ -49,26 +53,23 @@ public class ProductServiceImpl implements ProductService {
                 .productDescriptionHTML(productDTO.getProductDescriptionHTML())
                 .priceInMKD(productDTO.getPriceInMKD())
                 .pathsToProductIMGs(new LinkedList<>())
-                .valueForProductAttribute(new HashMap<>())
+                .valueForProductAttribute(convertAttributeIdMapToAttributeMap(productDTO.getAttributeIdAndValueMap()))
                 .dateCreated(LocalDateTime.now())
                 .build();
-        //gi zemam site atributi od kategorijata i gi inicijaliziram na prazen string, korisnikot treba da stava vrednosti
-        category.getAttributes().forEach(attribute -> product.getValueForProductAttribute().put(attribute, ""));
         return productRepository.save(product);
     }
 
     @Override
-    public Product update(Long id, ProductDTO productDTO) {
-        Product product = findById(id);
+    public Product update(ProductDTO productDTO) {
+        Product product = findById(productDTO.getId());
         product.setProductTitle(productDTO.getProductTitle());
         product.setProductDescriptionHTML(productDTO.getProductDescriptionHTML());
         product.setPriceInMKD(productDTO.getPriceInMKD());
-        if (!id.equals(product.getCategory().getId())) { //ako e smeneta kategorijata na proizvodot, se brishat site atributi (zoshto se vrzani so kategorijata)
+        if (!productDTO.getId().equals(product.getCategory().getId())) {
             Category category = categoryRepository.findById(productDTO.getCategoryId())
                     .orElseThrow(() -> new EntityNotFoundException("Category with id " + productDTO.getCategoryId() + " not found!"));
-            product.setValueForProductAttribute(new HashMap<>());
             product.setCategory(category);
-            category.getAttributes().forEach(attribute -> product.getValueForProductAttribute().put(attribute, ""));
+            product.setValueForProductAttribute(convertAttributeIdMapToAttributeMap(productDTO.getAttributeIdAndValueMap()));
         }
         return productRepository.save(product);
     }
@@ -100,5 +101,27 @@ public class ProductServiceImpl implements ProductService {
             product.setValueForProductAttribute(newMap);
         });
         productRepository.saveAll(allProductsUnderThisCategory);
+    }
+
+    private HashMap<Attribute, String> convertAttributeIdMapToAttributeMap(Map<Long, String> attributeIdAndValueMap){
+        HashMap<Attribute, String> attributeAndValues = new HashMap<>();
+        attributeIdAndValueMap.forEach((key, value) -> attributeAndValues.put(attributeService.findById(key), value));
+        attributeAndValues.forEach((key, value) -> {
+            if(key.isNumeric() && !isNumeric(value))
+                throw new IllegalAttributeValueException(key.getName(), value);
+        });
+        return attributeAndValues;
+    }
+
+    private static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 }

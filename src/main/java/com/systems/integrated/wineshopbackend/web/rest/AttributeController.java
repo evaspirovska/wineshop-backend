@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,13 +33,13 @@ public class AttributeController {
 
     @GetMapping
     public ResponseEntity<?> getAllAttributes(){
-        List<Attribute> attributes = attributeService.findAll();
+        List<AttributeDTO> attributes = attributeService.findAll().stream().map(Attribute::convertToDTO).collect(Collectors.toList());
         return new ResponseEntity<>(attributes, HttpStatus.OK);
     }
 
     @GetMapping("/bycategory/{id}")
     public ResponseEntity<?> getAttributesByCategory(@PathVariable Long id){
-        List<Attribute> attributes = attributeService.findAttributesByCategoryId(id);
+        List<AttributeDTO> attributes = attributeService.findAttributesByCategoryId(id).stream().map(Attribute::convertToDTO).collect(Collectors.toList());
         return new ResponseEntity<>(attributes, HttpStatus.OK);
     }
 
@@ -51,19 +52,19 @@ public class AttributeController {
         catch (IllegalArgumentException ex){
             return new ResponseEntity<>(ex.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(attribute, HttpStatus.OK);
+        return new ResponseEntity<>(Attribute.convertToDTO(attribute), HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateAttribute(@PathVariable Long id, @RequestBody AttributeDTO attributeDTO){
+    @PutMapping("/update")
+    public ResponseEntity<?> updateAttribute(@RequestBody AttributeDTO attributeDTO){
         Attribute attribute;
         try{
-            attribute = attributeService.update(id, attributeDTO);
+            attribute = attributeService.update(attributeDTO);
         }
         catch (IllegalArgumentException ex){
             return new ResponseEntity<>(ex.toString(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(attribute, HttpStatus.OK);
+        return new ResponseEntity<>(Attribute.convertToDTO(attribute), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

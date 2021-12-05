@@ -1,5 +1,6 @@
 package com.systems.integrated.wineshopbackend.models.products;
 
+import com.systems.integrated.wineshopbackend.models.products.DTO.AttributeDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,6 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 @Embeddable
-@Table(name = "Attributes")
 @Data
 public class Attribute {
     @Id
@@ -21,6 +21,7 @@ public class Attribute {
 
     @NotNull
     @NotEmpty
+    @Column(unique = true)
     private String name;
 
     private String suffix;
@@ -30,4 +31,10 @@ public class Attribute {
     private Category category;
 
     private LocalDateTime dateCreated;
+
+    private boolean isNumeric;
+
+    public static AttributeDTO convertToDTO(Attribute attribute){
+        return new AttributeDTO(attribute.getId(), attribute.getName(), attribute.getSuffix(), attribute.getCategory().getId(), attribute.isNumeric(), attribute.getDateCreated());
+    }
 }
