@@ -1,9 +1,7 @@
 package com.systems.integrated.wineshopbackend.web.rest;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
-import com.systems.integrated.wineshopbackend.models.orders.DTO.ProductInShoppingCartDTO;
 import com.systems.integrated.wineshopbackend.models.orders.Order;
-import com.systems.integrated.wineshopbackend.models.orders.ShoppingCart;
 import com.systems.integrated.wineshopbackend.service.intef.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
