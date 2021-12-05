@@ -1,4 +1,4 @@
-package com.systems.integrated.wineshopbackend.models.interaction;
+package com.systems.integrated.wineshopbackend.models.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,16 +13,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "Discounts")
-public class Discount {
+@Table(name = "AuthTokens")
+public class AuthToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private User user;
+
+    private String token;
+
+    private String type;
+
     private LocalDateTime dateCreated;
 
-    private int discountPercent;
-
-
+    private LocalDateTime dateExpires;
 }

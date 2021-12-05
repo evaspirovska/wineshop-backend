@@ -30,4 +30,15 @@ public class ProductInShoppingCart {
     private int quantity;
 
     private LocalDateTime dateCreated;
+
+    public ProductInShoppingCart(Product product, ShoppingCart shoppingCart, int quantity) {
+        this.product = product;
+        this.shoppingCart = shoppingCart;
+        this.quantity = quantity;
+        this.dateCreated = LocalDateTime.now();
+    }
+
+    public Double calculatePrice() {
+        return quantity * product.getPriceInMKD();
+    }
 }

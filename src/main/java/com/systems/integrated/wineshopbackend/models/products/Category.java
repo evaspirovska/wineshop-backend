@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -30,7 +31,9 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 
+    private LocalDateTime dateCreated;
+
     public static CategoryDTO convertToDTO(Category category){
-        return new CategoryDTO(category.getId(), category.getName());
+        return new CategoryDTO(category.getId(), category.getName(), category.getDateCreated());
     }
 }

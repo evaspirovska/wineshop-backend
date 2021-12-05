@@ -6,29 +6,35 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
 @Embeddable
-@Table
 @Data
 public class Attribute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @NotEmpty
     @Column(unique = true)
     private String name;
+
     private String suffix;
+
     @ManyToOne
     @NotNull
     private Category category;
+
+    private LocalDateTime dateCreated;
+
     private boolean isNumeric;
 
     public static AttributeDTO convertToDTO(Attribute attribute){
-        return new AttributeDTO(attribute.getId(), attribute.getName(), attribute.getSuffix(), attribute.getCategory().getId(), attribute.isNumeric());
+        return new AttributeDTO(attribute.getId(), attribute.getName(), attribute.getSuffix(), attribute.getCategory().getId(), attribute.isNumeric(), attribute.getDateCreated());
     }
 }

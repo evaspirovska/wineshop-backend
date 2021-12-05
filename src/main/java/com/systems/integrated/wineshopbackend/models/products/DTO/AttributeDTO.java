@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
@@ -19,6 +20,7 @@ public class AttributeDTO {
     private final Long categoryId;
     @NotNull
     private final boolean isNumeric;
+    private final LocalDateTime dateCreated;
 
     public void setId(Long id){
         this.id=id;

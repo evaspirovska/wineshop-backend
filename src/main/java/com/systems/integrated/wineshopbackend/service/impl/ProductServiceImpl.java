@@ -12,7 +12,9 @@ import com.systems.integrated.wineshopbackend.service.intef.AttributeService;
 import com.systems.integrated.wineshopbackend.service.intef.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private final ProductJPARepository productRepository;
@@ -51,6 +54,7 @@ public class ProductServiceImpl implements ProductService {
                 .priceInMKD(productDTO.getPriceInMKD())
                 .pathsToProductIMGs(new LinkedList<>())
                 .valueForProductAttribute(convertAttributeIdMapToAttributeMap(productDTO.getAttributeIdAndValueMap()))
+                .dateCreated(LocalDateTime.now())
                 .build();
         return productRepository.save(product);
     }
