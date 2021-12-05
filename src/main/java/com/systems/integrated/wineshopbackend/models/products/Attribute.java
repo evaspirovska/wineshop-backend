@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Embeddable
 @Data
+@Table(name = "Attributes")
 public class Attribute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

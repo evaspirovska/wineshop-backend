@@ -6,6 +6,7 @@ import com.systems.integrated.wineshopbackend.models.products.Attribute;
 import com.systems.integrated.wineshopbackend.models.products.Category;
 import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 import com.systems.integrated.wineshopbackend.models.products.Product;
+import com.systems.integrated.wineshopbackend.repository.AttributeJPARepository;
 import com.systems.integrated.wineshopbackend.repository.CategoryJPARepository;
 import com.systems.integrated.wineshopbackend.repository.ProductJPARepository;
 import com.systems.integrated.wineshopbackend.service.intef.AttributeService;
@@ -28,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductJPARepository productRepository;
     private final CategoryJPARepository categoryRepository;
-    private final AttributeService attributeService;
+    private final AttributeJPARepository attributeRepository;
 
 
     @Override
@@ -105,7 +106,8 @@ public class ProductServiceImpl implements ProductService {
 
     private HashMap<Attribute, String> convertAttributeIdMapToAttributeMap(Map<Long, String> attributeIdAndValueMap){
         HashMap<Attribute, String> attributeAndValues = new HashMap<>();
-        attributeIdAndValueMap.forEach((key, value) -> attributeAndValues.put(attributeService.findById(key), value));
+        attributeIdAndValueMap.forEach((key, value) -> attributeAndValues.put(attributeRepository.findById(key)
+                .orElseThrow(() -> new EntityNotFoundException("Attribute with id " + key + " not found!")), value));
         attributeAndValues.forEach((key, value) -> {
             if(key.isNumeric() && !isNumeric(value))
                 throw new IllegalAttributeValueException(key.getName(), value);
