@@ -11,6 +11,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Getter
 public class ProductDTO {
+    private Long id;
     @NotNull
     @NotEmpty
     private final Long categoryId;
@@ -28,4 +29,8 @@ public class ProductDTO {
     private final Map<Long, String> attributeIdAndValueMap;
 
     private final LocalDateTime dateCreated;
+
+    public void setId(Long id){
+        this.id=id;
+    }
 }

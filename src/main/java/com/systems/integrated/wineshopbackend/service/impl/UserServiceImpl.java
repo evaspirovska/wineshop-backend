@@ -4,6 +4,7 @@ import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundEx
 import com.systems.integrated.wineshopbackend.models.users.AuthToken;
 import com.systems.integrated.wineshopbackend.models.users.DTO.UserDTO;
 import com.systems.integrated.wineshopbackend.models.users.Postman;
+import com.systems.integrated.wineshopbackend.models.users.Role;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.repository.PostmanJPARepository;
 import com.systems.integrated.wineshopbackend.repository.UserJPARepository;
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(UserDTO userDTO) {
+    public User signUp(UserDTO userDTO) {
         if (userRepository.existsUserByUsername(userDTO.getUsername())) {
             throw new RuntimeException(String.format("User with this username: %s already exists", userDTO.getUsername()));
         }
@@ -118,7 +119,7 @@ public class UserServiceImpl implements UserService {
                 .password(encoder.encode(userDTO.getPassword()))
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
-                .role(userDTO.getRole())
+                .role(Role.ROLE_USER)
                 .dateCreated(LocalDateTime.now())
                 .build();
 
