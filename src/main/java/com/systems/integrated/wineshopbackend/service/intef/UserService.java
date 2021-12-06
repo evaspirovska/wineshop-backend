@@ -25,4 +25,6 @@ public interface UserService {
     void deleteUserById(Long userId);
 
     void resetUserPassword(User user);
+
+    void createPostman(User user, String city);
 }
