@@ -3,8 +3,10 @@ package com.systems.integrated.wineshopbackend.service.impl;
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
 import com.systems.integrated.wineshopbackend.models.users.AuthToken;
 import com.systems.integrated.wineshopbackend.models.users.DTO.UserDTO;
+import com.systems.integrated.wineshopbackend.models.users.Postman;
 import com.systems.integrated.wineshopbackend.models.users.Role;
 import com.systems.integrated.wineshopbackend.models.users.User;
+import com.systems.integrated.wineshopbackend.repository.PostmanJPARepository;
 import com.systems.integrated.wineshopbackend.repository.UserJPARepository;
 import com.systems.integrated.wineshopbackend.service.intef.AuthTokenService;
 import com.systems.integrated.wineshopbackend.service.intef.EmailService;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder encoder;
     private final EmailService emailService;
     private final AuthTokenService authTokenService;
+    private final PostmanJPARepository postmanRepository;
 
     @Value("${wineShop.mail.url}")
     private String url;
@@ -169,5 +172,11 @@ public class UserServiceImpl implements UserService {
                     String.format(RESET_PASSWORD_CONTENT, user.getUsername(), url, authToken.getToken()));
         } catch (MessagingException exception) {
         }
+    }
+
+    @Override
+    public void createPostman(User user, String city) {
+        Postman pc = new Postman(user, city);
+        this.postmanRepository.save(pc);
     }
 }
