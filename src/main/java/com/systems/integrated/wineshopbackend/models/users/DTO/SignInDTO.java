@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @Getter
-public class LoginDTO {
+public class SignInDTO {
 
     @NotNull
     @NotBlank

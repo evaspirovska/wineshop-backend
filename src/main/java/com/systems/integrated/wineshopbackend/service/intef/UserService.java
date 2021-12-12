@@ -16,7 +16,7 @@ public interface UserService {
 
     User createUser(UserDTO newUser) throws MessagingException;
 
-    User register(UserDTO newUser);
+    User signUp(UserDTO newUser);
 
     User updateUser(UserDTO userDTO);
 
@@ -25,4 +25,6 @@ public interface UserService {
     void deleteUserById(Long userId);
 
     void resetUserPassword(User user);
+
+    void createPostman(User user, String city);
 }

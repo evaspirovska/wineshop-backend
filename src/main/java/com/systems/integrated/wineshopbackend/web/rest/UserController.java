@@ -36,8 +36,11 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody @Validated UserDTO userDTO) throws MessagingException {
+    public ResponseEntity<?> createUser(@RequestBody @Validated UserDTO userDTO, @RequestParam String city) throws MessagingException {
         User user = userService.createUser(userDTO);
+        if (city != null) {
+            userService.createPostman(user, city);
+        }
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 

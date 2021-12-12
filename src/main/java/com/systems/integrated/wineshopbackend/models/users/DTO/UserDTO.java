@@ -32,10 +32,7 @@ public class UserDTO {
     @NotBlank
     private final String surname;
 
-    @NotNull
-    @NotBlank
     private final Role role;
-
 
     private final LocalDateTime dateCreated;
 }
