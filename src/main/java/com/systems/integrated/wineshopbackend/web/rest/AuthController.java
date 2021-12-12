@@ -64,7 +64,7 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully!");
     }
 
-    @PostMapping("authenticateToken/{token}")
+    @PostMapping("/authenticateToken/{token}")
     public ResponseEntity<?> authenticateToken(@PathVariable("token") String token) {
         boolean validateToken = authTokenService.validateToken(token);
 

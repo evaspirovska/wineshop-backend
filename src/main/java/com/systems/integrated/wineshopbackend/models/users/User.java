@@ -33,6 +33,7 @@ public class User {
 
     private String surname;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     private LocalDateTime dateCreated;

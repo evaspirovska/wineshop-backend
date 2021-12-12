@@ -86,6 +86,6 @@ public class UserController {
 
         userService.resetUserPassword(user);
 
-        return new ResponseEntity<>("Email successfully sent to" + user.getUsername(), HttpStatus.OK);
+        return new ResponseEntity<>("Email successfully sent to " + user.getUsername(), HttpStatus.OK);
     }
 }

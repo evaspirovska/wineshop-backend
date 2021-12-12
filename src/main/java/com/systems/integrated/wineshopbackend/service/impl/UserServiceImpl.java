@@ -3,6 +3,7 @@ package com.systems.integrated.wineshopbackend.service.impl;
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
 import com.systems.integrated.wineshopbackend.models.users.AuthToken;
 import com.systems.integrated.wineshopbackend.models.users.DTO.UserDTO;
+import com.systems.integrated.wineshopbackend.models.users.Role;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.repository.UserJPARepository;
 import com.systems.integrated.wineshopbackend.service.intef.AuthTokenService;
@@ -115,7 +116,7 @@ public class UserServiceImpl implements UserService {
                 .password(encoder.encode(userDTO.getPassword()))
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
-                .role(userDTO.getRole())
+                .role(Role.ROLE_USER)
                 .dateCreated(LocalDateTime.now())
                 .build();
 
