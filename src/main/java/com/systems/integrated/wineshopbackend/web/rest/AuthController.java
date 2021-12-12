@@ -50,6 +50,8 @@ public class AuthController {
 
         return ResponseEntity.ok(new JwtResponseDTO(userDetails.getId(),
                 userDetails.getUsername(),
+                userDetails.getName(),
+                userDetails.getSurname(),
                 userDetails.getEmail(),
                 jwt,
                 role));
@@ -66,7 +68,7 @@ public class AuthController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("authenticateToken/{token}")
+    @PostMapping("/authenticateToken/{token}")
     public ResponseEntity<?> authenticateToken(@PathVariable("token") String token) {
         boolean validateToken = authTokenService.validateToken(token);
 
