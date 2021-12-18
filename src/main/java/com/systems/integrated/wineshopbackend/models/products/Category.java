@@ -26,7 +26,7 @@ public class Category {
     @NotNull
     @NotEmpty
     private String name;
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Attribute> attributes;
     @OneToMany(mappedBy = "category")
     private List<Product> products;
