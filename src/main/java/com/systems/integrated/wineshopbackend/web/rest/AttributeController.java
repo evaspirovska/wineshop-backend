@@ -43,6 +43,7 @@ public class AttributeController {
         return new ResponseEntity<>(attributes, HttpStatus.OK);
     }
 
+
     @PostMapping("/create")
     public ResponseEntity<?> createNewAttribute(@RequestBody AttributeDTO attributeDTO){
         Attribute attribute;
@@ -53,6 +54,19 @@ public class AttributeController {
             return new ResponseEntity<>(ex.toString(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(Attribute.convertToDTO(attribute), HttpStatus.OK);
+    }
+
+    @PostMapping("/createall")
+    public ResponseEntity<?> createNewAttributes(@RequestBody List<AttributeDTO> attributeDTOS){
+        try {
+            for(AttributeDTO attributeDTO : attributeDTOS){
+                attributeService.create(attributeDTO);
+            }
+        }
+        catch (IllegalArgumentException ex){
+            return new ResponseEntity<>(ex.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("All attributes created successfully!", HttpStatus.OK);
     }
 
     @PutMapping("/update")

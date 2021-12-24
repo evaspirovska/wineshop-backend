@@ -19,7 +19,7 @@ public class AttributeDTO {
     @NotEmpty
     private final Long categoryId;
     @NotNull
-    private final boolean isNumeric;
+    private final boolean numeric;
     private final LocalDateTime dateCreated;
 
     public void setId(Long id){
