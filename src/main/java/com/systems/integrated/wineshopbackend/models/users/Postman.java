@@ -23,16 +23,16 @@ public class Postman {
 
     private String city;
 
-    private Integer count;
+    private Integer ordersToDeliver;
 
-//    ne znam dali count ke treba
+    //    ne znam dali count ke treba
     public Postman(User user, String city) {
         this.user = user;
         this.city = city;
-        this.count = 0;
+        this.ordersToDeliver = 0;
     }
 
     public void updateCount() {
-        this.count++;
+        this.ordersToDeliver++;
     }
 }

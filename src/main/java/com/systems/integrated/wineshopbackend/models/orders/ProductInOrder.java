@@ -31,13 +31,6 @@ public class ProductInOrder {
 
     private LocalDateTime dateCreated;
 
-    public ProductInOrder(Product product, Order order, int quantity) {
-        this.product = product;
-        this.order = order;
-        this.quantity = quantity;
-        this.dateCreated = LocalDateTime.now();
-    }
-
 //    public Double calculatePrice() {
 //        return quantity * product.getPriceInMKD();
 //    }
