@@ -27,6 +27,9 @@ public class Order {
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    private User postman;
+
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<ProductInOrder> productsInOrder;
 
@@ -34,10 +37,20 @@ public class Order {
 
     private OrderStatus orderStatus;
 
-    public Order(User user) {
+    private String city;
+
+    private String telephone;
+
+    private String address;
+
+    public Order(User user, User postman, String city, String telephone, String address) {
         this.user = user;
+        this.postman = postman;
+        this.telephone = telephone;
+        this.address = address;
         this.productsInOrder = new ArrayList<>();
         this.dateCreated = LocalDateTime.now();
         this.orderStatus = OrderStatus.CREATED;
+        this.city = city;
     }
 }

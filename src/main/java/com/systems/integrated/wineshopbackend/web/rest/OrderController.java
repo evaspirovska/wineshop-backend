@@ -1,6 +1,7 @@
 package com.systems.integrated.wineshopbackend.web.rest;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
+import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
 import com.systems.integrated.wineshopbackend.models.orders.Order;
 import com.systems.integrated.wineshopbackend.service.intef.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -27,24 +28,25 @@ public class OrderController {
         String username = req.getRemoteUser();
         try {
             orders = this.orderService.getOrders(username);
-        }
-        catch (UsernameNotFoundException ex) {
+        } catch (UsernameNotFoundException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PostMapping("/makeNewOrder")
-    public ResponseEntity<?> addProductToShoppingCart(HttpServletRequest req) {
+    @GetMapping("/createOrder")
+    public ResponseEntity<?> createOrder() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-        String username = req.getRemoteUser();
-        Order order;
-        try{
-            order = orderService.makeOrder(username);
-        }
-        catch (UsernameNotFoundException | EntityNotFoundException ex) {
+    @PostMapping("/makeOrder")
+    public ResponseEntity<?> makeOrder(@RequestBody OrderDto orderDto) {
+
+        try {
+            Order order = orderService.makeOrder(orderDto);
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        } catch (UsernameNotFoundException | EntityNotFoundException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 }
