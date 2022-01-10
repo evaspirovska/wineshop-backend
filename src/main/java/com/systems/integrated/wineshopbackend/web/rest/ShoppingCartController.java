@@ -1,7 +1,9 @@
 package com.systems.integrated.wineshopbackend.web.rest;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
+import com.systems.integrated.wineshopbackend.models.orders.DTO.DeleteFromCartDTO;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.ProductInShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.orders.DTO.ShoppingCartDTO;
 import com.systems.integrated.wineshopbackend.models.orders.ProductInShoppingCart;
 import com.systems.integrated.wineshopbackend.models.orders.ShoppingCart;
 import com.systems.integrated.wineshopbackend.service.intef.ShoppingCartService;
@@ -21,38 +23,37 @@ public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
 
-    @GetMapping
-    public ResponseEntity<?> getShoppingCart(HttpServletRequest req) {
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getShoppingCart(@PathVariable String username) {
 
         ShoppingCart shoppingCart;
-        String username = req.getRemoteUser();
+        ShoppingCartDTO shoppingCartDTO;
         try {
             shoppingCart = this.shoppingCartService.getShoppingCart(username);
+            shoppingCartDTO = this.shoppingCartService.convertToDTO(shoppingCart);
         }
         catch (UsernameNotFoundException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(shoppingCart, HttpStatus.OK);
+        return new ResponseEntity<>(shoppingCartDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProductFromShoppingCart(@PathVariable Long id, HttpServletRequest req) {
-
-        String username = req.getRemoteUser();
+    @DeleteMapping("/deleteProduct")
+    public ResponseEntity<?> deleteProductFromShoppingCart(@RequestBody DeleteFromCartDTO deleteFromCartDTO) {
+        String username = deleteFromCartDTO.getUsername();
+        Long productId = deleteFromCartDTO.getProductId();
         try {
-            shoppingCartService.deleteProductFromShoppingCart(id, username);
+            shoppingCartService.deleteProductFromShoppingCart(productId, username);
         }
         catch (UsernameNotFoundException | EntityNotFoundException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>("Product in shopping cart with id " + id + " deleted.", HttpStatus.OK);
+        return new ResponseEntity<>("Product in shopping cart with id " + productId + " deleted.", HttpStatus.OK);
     }
 
-    @PostMapping("/addToShoppingCart")
-    public ResponseEntity<?> addProductToShoppingCart(@RequestBody ProductInShoppingCartDTO productInShoppingCartDTO,
-                                                      HttpServletRequest req) {
-
-        String username = req.getRemoteUser();
+    @PostMapping("/{username}/addToShoppingCart")
+    public ResponseEntity<?> addProductToShoppingCart(@PathVariable String username,
+                                                      @RequestBody ProductInShoppingCartDTO productInShoppingCartDTO) {
         ShoppingCart shoppingCart;
         try{
             shoppingCart = shoppingCartService.addProductToShoppingCart(productInShoppingCartDTO, username);
@@ -60,7 +61,8 @@ public class ShoppingCartController {
         catch (UsernameNotFoundException | EntityNotFoundException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(shoppingCart, HttpStatus.OK);
+        ShoppingCartDTO shoppingCartDTO = shoppingCartService.convertToDTO(shoppingCart);
+        return new ResponseEntity<>(shoppingCartDTO, HttpStatus.OK);
     }
 
 }

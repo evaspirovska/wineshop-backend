@@ -1,16 +1,20 @@
 package com.systems.integrated.wineshopbackend.models.orders;
 
+import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseProductInCartDTO;
+import com.systems.integrated.wineshopbackend.models.orders.DTO.ShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
+import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -39,5 +43,31 @@ public class ShoppingCart {
         this.productsInShoppingCart = new ArrayList<>();
         this.dateCreated = LocalDateTime.now();
 //        this.totalPrice = 0.0;
+    }
+
+    public static ShoppingCartDTO convertToDTO(ShoppingCart cart) {
+        List<ResponseProductInCartDTO> responseProductsInCart = new ArrayList<>();
+        for (ProductInShoppingCart product : cart.getProductsInShoppingCart()) {
+            ProductDTO productDTO = Product.convertToDTO(product.getProduct());
+            ResponseProductInCartDTO responseProductDTO = new ResponseProductInCartDTO(
+                    product.getId(),
+                    productDTO.getId(),
+                    productDTO.getCategoryId(),
+                    productDTO.getProductTitle(),
+                    productDTO.getProductDescriptionHTML(),
+                    productDTO.getPriceInMKD(),
+                    productDTO.getAttributeIdAndValueMap(),
+                    product.getDateCreated(),
+                    product.getQuantity()
+            );
+            responseProductsInCart.add(responseProductDTO);
+        }
+
+        return new ShoppingCartDTO(
+                cart.getId(),
+                cart.getUser().getUsername(),
+                responseProductsInCart,
+                cart.getDateCreated()
+        );
     }
 }
