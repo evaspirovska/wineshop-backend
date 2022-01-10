@@ -38,7 +38,7 @@ public class ShoppingCartController {
         return new ResponseEntity<>(shoppingCartDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteProduct")
+    @PostMapping("/deleteProduct")
     public ResponseEntity<?> deleteProductFromShoppingCart(@RequestBody DeleteFromCartDTO deleteFromCartDTO) {
         String username = deleteFromCartDTO.getUsername();
         Long productId = deleteFromCartDTO.getProductId();
