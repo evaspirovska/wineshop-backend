@@ -12,6 +12,7 @@ import com.systems.integrated.wineshopbackend.service.intef.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderServiceImpl implements OrderService {
 
     private final UserJPARepository userJPARepository;
@@ -45,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
         ShoppingCart shoppingCart = shoppingCartJPARepository.findByUser_Id(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("No products in shopping cart!"));
         Order order = createOrder(orderDto, user);
+        orderJPARepository.save(order);
         order.setProductsInOrder(addProductsToOrder(order, shoppingCart));
         orderJPARepository.save(order);
         return order;
