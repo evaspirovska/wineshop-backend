@@ -53,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
                 .productTitle(productDTO.getProductTitle())
                 .productDescriptionHTML(productDTO.getProductDescriptionHTML())
                 .priceInMKD(productDTO.getPriceInMKD())
+                .pathToMainProductIMG("none")
                 .pathsToProductIMGs(new LinkedList<>())
                 .valueForProductAttribute(convertAttributeIdMapToAttributeMap(productDTO.getAttributeIdAndValueMap()))
                 .dateCreated(LocalDateTime.now())
@@ -145,6 +146,8 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductImage(Long id, Integer imageId) {
         Product product = findById(id);
         product.getPathsToProductIMGs().remove(imageId + ".jpg");
+        if(product.getPathsToProductIMGs().size()==0)
+            product.setPathToMainProductIMG("none");
         productRepository.save(product);
     }
 
