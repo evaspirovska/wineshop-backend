@@ -1,6 +1,6 @@
 package com.systems.integrated.wineshopbackend.models.shopping_cart;
 
-import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ResponseProductInCartDTO;
+import com.systems.integrated.wineshopbackend.models.products.DTO.ResponseProductInSomethingDTO;
 import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ShoppingCartDTO;
 import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 import com.systems.integrated.wineshopbackend.models.products.Product;
@@ -45,10 +45,10 @@ public class ShoppingCart {
     }
 
     public static ShoppingCartDTO convertToDTO(ShoppingCart cart) {
-        List<ResponseProductInCartDTO> responseProductsInCart = new ArrayList<>();
+        List<ResponseProductInSomethingDTO> responseProductsInCart = new ArrayList<>();
         for (ProductInShoppingCart product : cart.getProductsInShoppingCart()) {
             ProductDTO productDTO = Product.convertToDTO(product.getProduct());
-            ResponseProductInCartDTO responseProductDTO = new ResponseProductInCartDTO(
+            ResponseProductInSomethingDTO responseProductInSomethingDTO = new ResponseProductInSomethingDTO(
                     product.getId(),
                     productDTO.getId(),
                     productDTO.getCategoryId(),
@@ -59,7 +59,7 @@ public class ShoppingCart {
                     product.getDateCreated(),
                     product.getQuantity()
             );
-            responseProductsInCart.add(responseProductDTO);
+            responseProductsInCart.add(responseProductInSomethingDTO);
         }
 
         return new ShoppingCartDTO(

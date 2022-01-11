@@ -1,6 +1,12 @@
 package com.systems.integrated.wineshopbackend.models.orders;
 
 import com.systems.integrated.wineshopbackend.models.enumerations.OrderStatus;
+import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO;
+import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
+import com.systems.integrated.wineshopbackend.models.products.Product;
+import com.systems.integrated.wineshopbackend.models.products.DTO.ResponseProductInSomethingDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ProductInShoppingCart;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +41,7 @@ public class Order {
 
     private LocalDateTime dateCreated;
 
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
     private String city;
@@ -52,5 +59,38 @@ public class Order {
         this.dateCreated = LocalDateTime.now();
         this.orderStatus = OrderStatus.CREATED;
         this.city = city;
+    }
+
+    public static ResponseOrderDTO convertToDto(Order order) {
+        List<ResponseProductInSomethingDTO> responseProductsInOrder = new ArrayList<>();
+        for (ProductInOrder product : order.getProductsInOrder()) {
+            ProductDTO productDTO = Product.convertToDTO(product.getProduct());
+            ResponseProductInSomethingDTO responseProductInSomethingDTO = new ResponseProductInSomethingDTO(
+                    product.getId(),
+                    productDTO.getId(),
+                    productDTO.getCategoryId(),
+                    productDTO.getProductTitle(),
+                    productDTO.getProductDescriptionHTML(),
+                    productDTO.getPriceInMKD(),
+                    productDTO.getAttributeIdAndValueMap(),
+                    product.getDateCreated(),
+                    product.getQuantity()
+            );
+            responseProductsInOrder.add(responseProductInSomethingDTO);
+        }
+
+        return new ResponseOrderDTO(
+                order.getId(),
+                order.getUser().getUsername(),
+                order.getUser().getName()+" "+order.getUser().getSurname(),
+                order.getPostman().getUsername(),
+                order.getPostman().getName()+" "+order.getPostman().getSurname(),
+                responseProductsInOrder,
+                order.getDateCreated(),
+                order.getOrderStatus(),
+                order.getCity(),
+                order.getTelephone(),
+                order.getAddress()
+        );
     }
 }

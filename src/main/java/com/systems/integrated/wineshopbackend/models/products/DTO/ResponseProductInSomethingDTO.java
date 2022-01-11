@@ -1,4 +1,4 @@
-package com.systems.integrated.wineshopbackend.models.shopping_cart.DTO;
+package com.systems.integrated.wineshopbackend.models.products.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Getter
-public class ResponseProductInCartDTO {
+public class ResponseProductInSomethingDTO {
     private Long id;
 
     private Long productId;

@@ -2,6 +2,7 @@ package com.systems.integrated.wineshopbackend.service.impl;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
+import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO;
 import com.systems.integrated.wineshopbackend.models.orders.Order;
 import com.systems.integrated.wineshopbackend.models.orders.ProductInOrder;
 import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
@@ -53,6 +54,11 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    @Override
+    public ResponseOrderDTO convertToDto(Order order) {
+        return Order.convertToDto(order);
+    }
+
     private Order createOrder(OrderDto orderDto, User user) {
 
         List<Postman> postmanList = this.postmanJPARepository.findAllByCity(orderDto.getCity())
@@ -60,7 +66,9 @@ public class OrderServiceImpl implements OrderService {
         Postman postman = postmanList.stream().min(Comparator.comparing(Postman::getOrdersToDeliver)).get();
         postman.updateCount();
         this.postmanJPARepository.save(postman);
-        return new Order(user, postman.getUser(), orderDto.getCity(), orderDto.getTelephone(), orderDto.getAddress());
+        Order order =
+                new Order(user, postman.getUser(), orderDto.getCity(), orderDto.getTelephone(), orderDto.getAddress());
+        return null;
     }
 
     private List<ProductInOrder> addProductsToOrder(Order order, ShoppingCart shoppingCart) {
