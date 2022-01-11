@@ -126,4 +126,32 @@ public class ProductServiceImpl implements ProductService {
         }
         return true;
     }
+
+    @Override
+    public void updateMainProductImage(Long id, String filePath) {
+        Product product = findById(id);
+        product.setPathToMainProductIMG(filePath);
+        productRepository.save(product);
+    }
+
+    @Override
+    public void updateAllProductImages(Long id, List<String> filePaths) {
+        Product product = findById(id);
+        product.setPathsToProductIMGs(filePaths);
+        productRepository.save(product);
+    }
+
+    @Override
+    public void deleteProductImage(Long id, Integer imageId) {
+        Product product = findById(id);
+        product.getPathsToProductIMGs().remove(imageId + ".jpg");
+        productRepository.save(product);
+    }
+
+    @Override
+    public void addNewProductImage(Long id, String filename) {
+        Product product = findById(id);
+        product.getPathsToProductIMGs().add(filename);
+        productRepository.save(product);
+    }
 }

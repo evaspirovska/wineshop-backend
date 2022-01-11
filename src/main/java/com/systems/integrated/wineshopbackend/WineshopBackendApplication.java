@@ -1,20 +1,31 @@
 package com.systems.integrated.wineshopbackend;
 
+import com.systems.integrated.wineshopbackend.service.intef.ImageStorageService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import javax.annotation.Resource;
 import java.util.Properties;
 
 @SpringBootApplication
-public class WineshopBackendApplication {
+public class WineshopBackendApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(WineshopBackendApplication.class, args);
     }
+
+    @Override
+    public void run(String... args) {
+        imageStorageService.init();
+    }
+
+    @Resource
+    ImageStorageService imageStorageService;
 
     @Value("${spring.mail.host}")
     private String host;
