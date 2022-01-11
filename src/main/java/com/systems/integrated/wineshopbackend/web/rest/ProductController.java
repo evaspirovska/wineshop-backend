@@ -141,8 +141,13 @@ public class ProductController {
 
     @GetMapping("/images/{productId}/{resolution}/main")
     public ResponseEntity<Resource> getMainImageForProductId(@PathVariable Long productId, @PathVariable String resolution){
-        Resource file = imageStorageService.load(productId + File.separator + resolution + File.separator +
-                productService.findById(productId).getPathToMainProductIMG());
+        String filename = productService.findById(productId).getPathToMainProductIMG();
+        Resource file = null;
+        if(!filename.equals("none"))
+            file = imageStorageService.load(productId + File.separator + resolution + File.separator + filename);
+        else{
+            file = imageStorageService.load("placeholder.png");
+        }
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
