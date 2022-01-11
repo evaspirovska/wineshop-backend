@@ -17,4 +17,12 @@ public interface ProductService {
     void delete(Long id);
 
     void updateProductAttributesForCategoryId(Long categoryId);
+
+    void updateMainProductImage(Long id, String filePath);
+
+    void updateAllProductImages(Long id, List<String> filePaths);
+
+    void deleteProductImage(Long id, Integer imageId);
+
+    void addNewProductImage(Long id, String filename);
 }
