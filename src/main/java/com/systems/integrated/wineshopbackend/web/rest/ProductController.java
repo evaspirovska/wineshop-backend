@@ -139,6 +139,14 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findById(productId).getPathToMainProductIMG());
     }
 
+    @GetMapping("/images/{productId}/{resolution}/main")
+    public ResponseEntity<Resource> getMainImageForProductId(@PathVariable Long productId, @PathVariable String resolution){
+        Resource file = imageStorageService.load(productId + File.separator + resolution + File.separator +
+                productService.findById(productId).getPathToMainProductIMG());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
     @GetMapping("/images/{productId}/{resolution}/{imageName}")
     public ResponseEntity<Resource> getImage(@PathVariable String productId, @PathVariable String resolution, @PathVariable String imageName){
         Resource file = imageStorageService.load(productId + File.separator + resolution + File.separator + imageName);
