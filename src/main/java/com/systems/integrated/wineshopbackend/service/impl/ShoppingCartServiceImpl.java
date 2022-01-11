@@ -1,10 +1,10 @@
 package com.systems.integrated.wineshopbackend.service.impl;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
-import com.systems.integrated.wineshopbackend.models.orders.DTO.ProductInShoppingCartDTO;
-import com.systems.integrated.wineshopbackend.models.orders.DTO.ShoppingCartDTO;
-import com.systems.integrated.wineshopbackend.models.orders.ProductInShoppingCart;
-import com.systems.integrated.wineshopbackend.models.orders.ShoppingCart;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ProductInShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ProductInShoppingCart;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
 import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.repository.ProductInShoppingCartJPARepository;

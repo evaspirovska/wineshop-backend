@@ -1,7 +1,7 @@
-package com.systems.integrated.wineshopbackend.models.orders;
+package com.systems.integrated.wineshopbackend.models.shopping_cart;
 
-import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseProductInCartDTO;
-import com.systems.integrated.wineshopbackend.models.orders.DTO.ShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ResponseProductInCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ShoppingCartDTO;
 import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.models.users.User;
@@ -14,7 +14,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Data

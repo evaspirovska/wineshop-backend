@@ -1,9 +1,8 @@
 package com.systems.integrated.wineshopbackend.service.intef;
 
-import com.systems.integrated.wineshopbackend.models.orders.DTO.ProductInShoppingCartDTO;
-import com.systems.integrated.wineshopbackend.models.orders.DTO.ShoppingCartDTO;
-import com.systems.integrated.wineshopbackend.models.orders.ProductInShoppingCart;
-import com.systems.integrated.wineshopbackend.models.orders.ShoppingCart;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ProductInShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
 
 public interface ShoppingCartService {
 

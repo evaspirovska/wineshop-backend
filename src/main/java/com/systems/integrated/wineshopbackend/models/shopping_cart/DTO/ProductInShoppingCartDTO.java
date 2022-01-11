@@ -1,4 +1,4 @@
-package com.systems.integrated.wineshopbackend.models.orders.DTO;
+package com.systems.integrated.wineshopbackend.models.shopping_cart.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

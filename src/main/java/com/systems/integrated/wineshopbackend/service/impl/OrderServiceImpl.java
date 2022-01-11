@@ -4,7 +4,7 @@ import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundEx
 import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
 import com.systems.integrated.wineshopbackend.models.orders.Order;
 import com.systems.integrated.wineshopbackend.models.orders.ProductInOrder;
-import com.systems.integrated.wineshopbackend.models.orders.ShoppingCart;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
 import com.systems.integrated.wineshopbackend.models.users.Postman;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.repository.*;
