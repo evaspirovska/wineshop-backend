@@ -1,9 +1,10 @@
 package com.systems.integrated.wineshopbackend.service.impl;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
-import com.systems.integrated.wineshopbackend.models.orders.DTO.ProductInShoppingCartDTO;
-import com.systems.integrated.wineshopbackend.models.orders.ProductInShoppingCart;
-import com.systems.integrated.wineshopbackend.models.orders.ShoppingCart;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ProductInShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ShoppingCartDTO;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ProductInShoppingCart;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
 import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.repository.ProductInShoppingCartJPARepository;
@@ -14,12 +15,14 @@ import com.systems.integrated.wineshopbackend.service.intef.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartJPARepository shoppingCartJPARepository;
@@ -51,20 +54,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = this.getShoppingCart(username);
         ProductInShoppingCart productInShoppingCart = productInShoppingCartJPARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("product in shopping cart with id: " + id.toString() + "not found!"));
-        shoppingCart.getProductsInShoppingCart().remove(productInShoppingCart);
-        shoppingCartJPARepository.save(shoppingCart);
+        productInShoppingCartJPARepository.deleteAllByIdAndShoppingCart(id, shoppingCart);
+    }
+
+    @Override
+    public ShoppingCartDTO convertToDTO(ShoppingCart shoppingCart) {
+        return ShoppingCart.convertToDTO(shoppingCart);
     }
 
     private ProductInShoppingCart build(ProductInShoppingCartDTO productInShoppingCartDTO, User user) {
 
         Product product = productJPARepository.findById(productInShoppingCartDTO.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException("Product with id " + productInShoppingCartDTO.getProductId() + " not found!"));
-        return ProductInShoppingCart.builder()
+        ProductInShoppingCart productInShoppingCart = ProductInShoppingCart.builder()
                 .shoppingCart(this.getShoppingCart(user.getUsername()))
                 .product(product)
                 .quantity(productInShoppingCartDTO.getQuantity())
                 .dateCreated(LocalDateTime.now())
                 .build();
+        productInShoppingCartJPARepository.save(productInShoppingCart);
+        return productInShoppingCart;
     }
 
 }

@@ -2,9 +2,10 @@ package com.systems.integrated.wineshopbackend.service.impl;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
+import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO;
 import com.systems.integrated.wineshopbackend.models.orders.Order;
 import com.systems.integrated.wineshopbackend.models.orders.ProductInOrder;
-import com.systems.integrated.wineshopbackend.models.orders.ShoppingCart;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
 import com.systems.integrated.wineshopbackend.models.users.Postman;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.repository.*;
@@ -12,6 +13,7 @@ import com.systems.integrated.wineshopbackend.service.intef.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderServiceImpl implements OrderService {
 
     private final UserJPARepository userJPARepository;
@@ -45,9 +48,15 @@ public class OrderServiceImpl implements OrderService {
         ShoppingCart shoppingCart = shoppingCartJPARepository.findByUser_Id(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("No products in shopping cart!"));
         Order order = createOrder(orderDto, user);
+        orderJPARepository.save(order);
         order.setProductsInOrder(addProductsToOrder(order, shoppingCart));
         orderJPARepository.save(order);
         return order;
+    }
+
+    @Override
+    public ResponseOrderDTO convertToDto(Order order) {
+        return Order.convertToDto(order);
     }
 
     private Order createOrder(OrderDto orderDto, User user) {
@@ -57,7 +66,9 @@ public class OrderServiceImpl implements OrderService {
         Postman postman = postmanList.stream().min(Comparator.comparing(Postman::getOrdersToDeliver)).get();
         postman.updateCount();
         this.postmanJPARepository.save(postman);
-        return new Order(user, postman.getUser(), orderDto.getCity(), orderDto.getTelephone(), orderDto.getAddress());
+        Order order =
+                new Order(user, postman.getUser(), orderDto.getCity(), orderDto.getTelephone(), orderDto.getAddress());
+        return null;
     }
 
     private List<ProductInOrder> addProductsToOrder(Order order, ShoppingCart shoppingCart) {

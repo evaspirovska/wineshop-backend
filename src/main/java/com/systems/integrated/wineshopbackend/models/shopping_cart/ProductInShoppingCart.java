@@ -1,4 +1,4 @@
-package com.systems.integrated.wineshopbackend.models.orders;
+package com.systems.integrated.wineshopbackend.models.shopping_cart;
 
 import com.systems.integrated.wineshopbackend.models.products.Product;
 import lombok.AllArgsConstructor;
