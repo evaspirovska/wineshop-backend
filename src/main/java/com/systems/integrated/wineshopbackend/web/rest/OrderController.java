@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +23,10 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<?> getOrders(HttpServletRequest req) {
+    public ResponseEntity<?> getOrders(@RequestParam String username) {
 
         List<Order> orders;
         List<ResponseOrderDTO> responseOrderDTOS;
-        String username = req.getRemoteUser();
         try {
             orders = this.orderService.getOrders(username);
             responseOrderDTOS = orders.stream().map(Order::convertToDto).collect(Collectors.toList());

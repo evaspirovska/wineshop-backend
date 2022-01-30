@@ -1,5 +1,6 @@
 package com.systems.integrated.wineshopbackend.service.impl;
 
+import com.systems.integrated.wineshopbackend.models.enumerations.OrderStatus;
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO;
@@ -48,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
         ShoppingCart shoppingCart = shoppingCartJPARepository.findByUser_Id(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("No products in shopping cart!"));
         Order order = createOrder(orderDto, user);
+        order.setOrderStatus(OrderStatus.CREATED);
         orderJPARepository.save(order);
         order.setProductsInOrder(addProductsToOrder(order, shoppingCart));
         orderJPARepository.save(order);
@@ -68,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
         this.postmanJPARepository.save(postman);
         Order order =
                 new Order(user, postman.getUser(), orderDto.getCity(), orderDto.getTelephone(), orderDto.getAddress());
-        return null;
+        return order;
     }
 
     private List<ProductInOrder> addProductsToOrder(Order order, ShoppingCart shoppingCart) {
