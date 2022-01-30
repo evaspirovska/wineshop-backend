@@ -4,11 +4,14 @@ import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
     Product findById(Long id);
 
     List<Product> findAll();
+
+    List<Product> filterProducts(double priceFrom, double priceTo, Map<Long, String> attributeIdAndValue);
 
     Product create(ProductDTO productDTO);
 

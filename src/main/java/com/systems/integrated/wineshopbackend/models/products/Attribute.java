@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Embeddable
 @Data
 @Table(name = "Attributes")
-public class Attribute {
+public class Attribute implements Comparable<Attribute>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,5 +37,23 @@ public class Attribute {
 
     public static AttributeDTO convertToDTO(Attribute attribute){
         return new AttributeDTO(attribute.getId(), attribute.getName(), attribute.getSuffix(), attribute.getCategory().getId(), attribute.isNumeric(), attribute.getDateCreated());
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof Attribute)) return false;
+
+        Attribute temp = (Attribute) obj;
+        return this.id.equals(temp.id);
+    }
+
+    @Override
+    public int hashCode(){
+        return id.hashCode();
+    }
+
+    @Override
+    public int compareTo(Attribute attr){
+        return this.dateCreated.compareTo(attr.dateCreated);
     }
 }

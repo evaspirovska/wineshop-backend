@@ -9,17 +9,14 @@ import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.repository.AttributeJPARepository;
 import com.systems.integrated.wineshopbackend.repository.CategoryJPARepository;
 import com.systems.integrated.wineshopbackend.repository.ProductJPARepository;
-import com.systems.integrated.wineshopbackend.service.intef.AttributeService;
 import com.systems.integrated.wineshopbackend.service.intef.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,8 +41,42 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> filterProducts(double priceFrom, double priceTo, Map<Long, String> attributeIdAndValues) {
+        return productRepository.findAll().stream().filter(product -> {
+            boolean priceInRange = product.getPriceInMKD() >= priceFrom && product.getPriceInMKD() <= priceTo;
+            AtomicBoolean attributesInRange = new AtomicBoolean(true);
+            if(attributeIdAndValues == null)
+                return priceInRange && attributesInRange.get();
+            attributeIdAndValues.forEach((attrId, values) -> {
+                Attribute currentAttribute = attributeRepository
+                        .findById(attrId)
+                        .orElseThrow(() -> new EntityNotFoundException("Attribute with id " + attrId + " not found!"));
+                String productAttributeValue = product.getValueForProductAttribute().get(currentAttribute);
+                if(currentAttribute.isNumeric()){
+                    double[] fromToValues = Arrays.stream(values.split("-")).mapToDouble(Double::parseDouble).toArray();
+                    Arrays.sort(fromToValues);
+                    if(
+                            !(fromToValues[0] <= Double.parseDouble(productAttributeValue)
+                            && fromToValues[1] >= Double.parseDouble(productAttributeValue))
+                    )
+                        attributesInRange.set(false);
+                }
+                else{
+                    attributesInRange.set(Arrays.stream(values.split("-"))
+                            .anyMatch(productAttributeValue::equalsIgnoreCase));
+                }
+            });
+            return priceInRange && attributesInRange.get();
+        }).collect(Collectors.toList());
+    }
+
+    @Override
     public Product create(ProductDTO productDTO) {
-        //todo: if product image is empty, change path to default placeholder
+        if(productDTO.getAttributeIdAndValueMap().values().stream().anyMatch(value -> value.contains("-"))){
+            //pri filtriranje na proizvodi da ne se sluchi primer 200-300 shto vazhi za numerichki
+            //atributi da se zbuni so tekstualna vrednost, zatoa ne dozvoluvam atribut da ima crticka vo vrednosta
+            throw new IllegalArgumentException("Attribute must not have a dash \"-\" in its value!");
+        }
         Category category = categoryRepository.findById(productDTO.getCategoryId())
                 .orElseThrow(() -> new EntityNotFoundException("Category with id " + productDTO.getCategoryId() + " not found!"));
         Product product = Product.builder()
@@ -63,6 +94,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product update(ProductDTO productDTO) {
+        if(productDTO.getAttributeIdAndValueMap().values().stream().anyMatch(value -> value.contains("-"))){
+            //pri filtriranje na proizvodi da ne se sluchi primer 200-300 shto vazhi za numerichki
+            //atributi da se zbuni so tekstualna vrednost, zatoa ne dozvoluvam atribut da ima crticka vo vrednosta
+            throw new IllegalArgumentException("Attribute must not have a dash \"-\" in its value!");
+        }
         Product product = findById(productDTO.getId());
         product.setProductTitle(productDTO.getProductTitle());
         product.setProductDescriptionHTML(productDTO.getProductDescriptionHTML());

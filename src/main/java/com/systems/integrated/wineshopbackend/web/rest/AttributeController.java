@@ -28,7 +28,7 @@ public class AttributeController {
         catch (EntityNotFoundException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(attribute, HttpStatus.OK);
+        return new ResponseEntity<>(Attribute.convertToDTO(attribute), HttpStatus.OK);
     }
 
     @GetMapping
