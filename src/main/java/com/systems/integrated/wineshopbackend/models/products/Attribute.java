@@ -22,7 +22,6 @@ public class Attribute implements Comparable<Attribute>{
 
     @NotNull
     @NotEmpty
-    @Column(unique = true)
     private String name;
 
     private String suffix;

@@ -6,6 +6,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -29,6 +30,8 @@ public class ProductDTO {
     private final Double priceInMKD;
 
     private final Map<Long, String> attributeIdAndValueMap;
+
+    private final Map<String, List<String>> attributeNameSuffixAndValueMap;
 
     private final LocalDateTime dateCreated;
 

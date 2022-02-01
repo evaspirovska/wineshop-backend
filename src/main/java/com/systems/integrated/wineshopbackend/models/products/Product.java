@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -55,10 +54,14 @@ public class Product {
 
     public static ProductDTO convertToDTO(Product product){
         TreeMap<Long, String> attributeValueMap = new TreeMap<>();
+        TreeMap<String, List<String>> attributeNameSuffixAndValueMap = new TreeMap<>();
         product.getValueForProductAttribute().forEach((key, value) -> attributeValueMap.put(key.getId(), value));
+        product.getValueForProductAttribute()
+                .forEach((key, value) ->
+                        attributeNameSuffixAndValueMap.put(key.getName(), List.of(key.getSuffix(), value)));
         return new ProductDTO(product.getId(), product.getCategory().getId(), product.getCategory().getName(),
                 product.getProductTitle(), product.getProductDescriptionHTML(),
                 product.getPriceInMKD(),
-                attributeValueMap, product.getDateCreated());
+                attributeValueMap, attributeNameSuffixAndValueMap, product.getDateCreated());
     }
 }
