@@ -5,8 +5,6 @@ import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO
 import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.models.products.DTO.ResponseProductInSomethingDTO;
-import com.systems.integrated.wineshopbackend.models.shopping_cart.DTO.ShoppingCartDTO;
-import com.systems.integrated.wineshopbackend.models.shopping_cart.ProductInShoppingCart;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

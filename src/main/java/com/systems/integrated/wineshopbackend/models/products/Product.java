@@ -56,7 +56,7 @@ public class Product {
     public static ProductDTO convertToDTO(Product product){
         TreeMap<Long, String> attributeValueMap = new TreeMap<>();
         product.getValueForProductAttribute().forEach((key, value) -> attributeValueMap.put(key.getId(), value));
-        return new ProductDTO(product.getId(), product.getCategory().getId(),
+        return new ProductDTO(product.getId(), product.getCategory().getId(), product.getCategory().getName(),
                 product.getProductTitle(), product.getProductDescriptionHTML(),
                 product.getPriceInMKD(),
                 attributeValueMap, product.getDateCreated());

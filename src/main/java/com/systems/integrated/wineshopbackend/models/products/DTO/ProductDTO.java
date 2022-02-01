@@ -16,6 +16,8 @@ public class ProductDTO {
     @NotEmpty
     private final Long categoryId;
 
+    private final String categoryName;
+
     @NotNull
     @NotEmpty
     private final String productTitle;
