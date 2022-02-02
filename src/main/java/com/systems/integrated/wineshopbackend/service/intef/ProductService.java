@@ -11,6 +11,8 @@ public interface ProductService {
 
     List<Product> findAll();
 
+    List<Product> findAllByCategoryId(Long id);
+
     List<Product> filterProducts(double priceFrom, double priceTo, Map<Long, String> attributeIdAndValue);
 
     Product create(ProductDTO productDTO);

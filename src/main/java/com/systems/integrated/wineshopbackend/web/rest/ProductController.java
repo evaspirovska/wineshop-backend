@@ -47,6 +47,12 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @GetMapping("/bycat/{id}")
+    public ResponseEntity<?> getAllProductsByCategoryId(@PathVariable Long id){
+        List<ProductDTO> products = productService.findAllByCategoryId(id).stream().map(Product::convertToDTO).collect(Collectors.toList());
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
     @GetMapping("/filter")
     public ResponseEntity<?> filterProducts(@RequestParam MultiValueMap<String, String> filters){
         //vo filters mora konstanto da se zapazat ovie fakti:

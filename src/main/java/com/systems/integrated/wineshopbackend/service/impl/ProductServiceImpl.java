@@ -41,6 +41,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findAllByCategoryId(Long id){
+        return productRepository.findAll().stream().filter(product -> product.getCategory().getId().equals(id)).collect(Collectors.toList());
+    }
+
+    @Override
     public List<Product> filterProducts(double priceFrom, double priceTo, Map<Long, String> attributeIdAndValues) {
         return productRepository.findAll().stream().filter(product -> {
             boolean priceInRange = product.getPriceInMKD() >= priceFrom && product.getPriceInMKD() <= priceTo;
