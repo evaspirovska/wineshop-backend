@@ -13,7 +13,7 @@ public interface ProductService {
 
     List<Product> findAllByCategoryId(Long id);
 
-    List<Product> filterProducts(double priceFrom, double priceTo, Map<Long, String> attributeIdAndValue);
+    List<Product> filterProducts(long categoryId, double priceFrom, double priceTo, Map<Long, String> attributeIdAndValue);
 
     Product create(ProductDTO productDTO);
 

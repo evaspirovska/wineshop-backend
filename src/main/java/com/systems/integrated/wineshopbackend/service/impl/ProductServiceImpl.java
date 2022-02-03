@@ -46,32 +46,38 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> filterProducts(double priceFrom, double priceTo, Map<Long, String> attributeIdAndValues) {
+    public List<Product> filterProducts(long categoryId, double priceFrom, double priceTo, Map<Long, String> attributeIdAndValues) {
         return productRepository.findAll().stream().filter(product -> {
             boolean priceInRange = product.getPriceInMKD() >= priceFrom && product.getPriceInMKD() <= priceTo;
             AtomicBoolean attributesInRange = new AtomicBoolean(true);
-            if(attributeIdAndValues == null)
-                return priceInRange && attributesInRange.get();
-            attributeIdAndValues.forEach((attrId, values) -> {
-                Attribute currentAttribute = attributeRepository
-                        .findById(attrId)
-                        .orElseThrow(() -> new EntityNotFoundException("Attribute with id " + attrId + " not found!"));
-                String productAttributeValue = product.getValueForProductAttribute().get(currentAttribute);
-                if(currentAttribute.isNumeric()){
-                    double[] fromToValues = Arrays.stream(values.split("-")).mapToDouble(Double::parseDouble).toArray();
-                    Arrays.sort(fromToValues);
-                    if(
-                            !(fromToValues[0] <= Double.parseDouble(productAttributeValue)
-                            && fromToValues[1] >= Double.parseDouble(productAttributeValue))
-                    )
+            if(attributeIdAndValues != null){
+                attributeIdAndValues.forEach((attrId, values) -> {
+                    Attribute currentAttribute = attributeRepository
+                            .findById(attrId)
+                            .orElseThrow(() -> new EntityNotFoundException("Attribute with id " + attrId + " not found!"));
+                    String productAttributeValue = product.getValueForProductAttribute().get(currentAttribute);
+                    if(productAttributeValue == null){
                         attributesInRange.set(false);
-                }
-                else{
-                    attributesInRange.set(Arrays.stream(values.split("-"))
-                            .anyMatch(productAttributeValue::equalsIgnoreCase));
-                }
-            });
-            return priceInRange && attributesInRange.get();
+                    }
+                    else if(currentAttribute.isNumeric()){
+                        double[] fromToValues = Arrays.stream(values.split("-")).mapToDouble(Double::parseDouble).toArray();
+                        Arrays.sort(fromToValues);
+                        if(
+                                !(fromToValues[0] <= Double.parseDouble(productAttributeValue)
+                                && fromToValues[1] >= Double.parseDouble(productAttributeValue))
+                        )
+                            attributesInRange.set(false);
+                    }
+                    else{
+                        attributesInRange.set(Arrays.stream(values.split("-"))
+                                .anyMatch(productAttributeValue::equalsIgnoreCase));
+                    }
+                });
+            }
+            if(categoryId == -1)
+                return priceInRange && attributesInRange.get();
+            else
+                return priceInRange && attributesInRange.get() && product.getCategory().getId().equals(categoryId);
         }).collect(Collectors.toList());
     }
 
