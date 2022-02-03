@@ -64,17 +64,17 @@ public class ProductController {
         //bi bil: attributes=1:5-100,2:crveno
         //so ova, filtrirame atribut so id 1 (tezhina) od 5-100 kg, i atribut so id 2 (vid) da e ednakov na 'crveno'
 
-        //celosen povik bi bilo: /api/products/filter?pricerange=mkd:0-100&attributes=1:5-100,2:crveno
+        //celosen povik bi bilo: /api/products/filter?categoryid=2&pricerange=mkd:0-100&attributes=1:5-100,2:crveno
         String priceRange = filters.get("pricerange").get(0);
         String attributes = filters.get("attributes").get(0);
+        long categoryId = Long.parseLong(filters.get("categoryid").get(0));
         String[] priceParts = priceRange.split(":"); //priceParts[0] e valutata, priceParts[1] e range-ot
         //sega za sega valutata e mkd
 
         double[] fromToValues = Arrays.stream(priceParts[1].split("-")).mapToDouble(Double::parseDouble).toArray();
         Arrays.sort(fromToValues);
-
         if(attributes.isBlank() || attributes.isEmpty()){
-            List<ProductDTO> products = productService.filterProducts(fromToValues[0], fromToValues[1], null)
+            List<ProductDTO> products = productService.filterProducts(categoryId, fromToValues[0], fromToValues[1], null)
                     .stream().map(Product::convertToDTO).collect(Collectors.toList());
 
             return new ResponseEntity<>(products, HttpStatus.OK);
@@ -84,7 +84,7 @@ public class ProductController {
                     .map(string -> string.split(":"))
                     .collect(Collectors.toMap(strings -> Long.parseLong(strings[0]), strings -> strings[1]));
 
-            List<ProductDTO> products = productService.filterProducts(fromToValues[0], fromToValues[1], attributeIdAndValueMap)
+            List<ProductDTO> products = productService.filterProducts(categoryId, fromToValues[0], fromToValues[1], attributeIdAndValueMap)
                     .stream().map(Product::convertToDTO).collect(Collectors.toList());
 
             return new ResponseEntity<>(products, HttpStatus.OK);
