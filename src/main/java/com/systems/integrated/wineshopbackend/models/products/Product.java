@@ -38,6 +38,8 @@ public class Product {
     @Column(length = 4096)
     private String productDescriptionHTML;
 
+    private int quantity;
+
     @NotNull
     @NotEmpty
     private Double priceInMKD;
@@ -60,7 +62,7 @@ public class Product {
                 .forEach((key, value) ->
                         attributeNameSuffixAndValueMap.put(key.getName(), List.of(key.getSuffix(), value)));
         return new ProductDTO(product.getId(), product.getCategory().getId(), product.getCategory().getName(),
-                product.getProductTitle(), product.getProductDescriptionHTML(),
+                product.getProductTitle(), product.getProductDescriptionHTML(), product.getQuantity(),
                 product.getPriceInMKD(),
                 attributeValueMap, attributeNameSuffixAndValueMap, product.getDateCreated());
     }
