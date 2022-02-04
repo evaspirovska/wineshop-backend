@@ -34,5 +34,7 @@ public class UserDTO {
 
     private final Role role;
 
+    private final String city;
+
     private final LocalDateTime dateCreated;
 }
