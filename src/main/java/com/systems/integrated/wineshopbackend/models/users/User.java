@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,5 +37,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<AuthToken> authTokens;
+
     private LocalDateTime dateCreated;
+
+    @PreRemove
+    private void preRemove() {
+        authTokens.forEach(token -> token.setUser(null));
+    }
 }

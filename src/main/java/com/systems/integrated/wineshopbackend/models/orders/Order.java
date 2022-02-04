@@ -34,7 +34,8 @@ public class Order {
     @ManyToOne
     private User postman;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER,
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     private List<ProductInOrder> productsInOrder;
 
     private LocalDateTime dateCreated;

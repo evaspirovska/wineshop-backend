@@ -7,6 +7,7 @@ import com.systems.integrated.wineshopbackend.service.intef.AttributeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class AttributeController {
 
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewAttribute(@RequestBody AttributeDTO attributeDTO){
         Attribute attribute;
         try {
@@ -57,6 +59,7 @@ public class AttributeController {
     }
 
     @PostMapping("/createall")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewAttributes(@RequestBody List<AttributeDTO> attributeDTOS){
         try {
             for(AttributeDTO attributeDTO : attributeDTOS){
@@ -70,6 +73,7 @@ public class AttributeController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateAttribute(@RequestBody AttributeDTO attributeDTO){
         Attribute attribute;
         try{
@@ -82,6 +86,7 @@ public class AttributeController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteAttribute(@PathVariable Long id) {
         attributeService.delete(id);
         return new ResponseEntity<>("Attribute with id " + id + " deleted.", HttpStatus.OK);

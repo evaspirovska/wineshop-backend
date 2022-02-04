@@ -9,6 +9,7 @@ import com.systems.integrated.wineshopbackend.service.intef.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @GetMapping("/{username}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> getShoppingCart(@PathVariable String username) {
 
         ShoppingCart shoppingCart;
@@ -36,6 +38,7 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/deleteProduct")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> deleteProductFromShoppingCart(@RequestBody DeleteFromCartDTO deleteFromCartDTO) {
         String username = deleteFromCartDTO.getUsername();
         Long productId = deleteFromCartDTO.getProductId();
@@ -49,6 +52,7 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/{username}/addToShoppingCart")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> addProductToShoppingCart(@PathVariable String username,
                                                       @RequestBody ProductInShoppingCartDTO productInShoppingCartDTO) {
         ShoppingCart shoppingCart;
