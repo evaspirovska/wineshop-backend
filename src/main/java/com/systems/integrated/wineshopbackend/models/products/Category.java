@@ -26,9 +26,9 @@ public class Category {
     @NotNull
     @NotEmpty
     private String name;
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Attribute> attributes;
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Product> products;
 
     private LocalDateTime dateCreated;

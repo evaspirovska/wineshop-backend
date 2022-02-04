@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -92,6 +93,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewProduct(@RequestBody ProductDTO productDTO){
         Product product;
         try {
@@ -104,6 +106,7 @@ public class ProductController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateProduct(@RequestBody ProductDTO productDTO){
         Product product;
         try{
@@ -116,12 +119,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id){
         productService.delete(id);
         return new ResponseEntity<>("Product with id " + id + " deleted.", HttpStatus.OK);
     }
 
     @PutMapping("/img/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addNewProductImage(@PathVariable Long id, MultipartFile image){
         String message = "";
         String fileName = "";
@@ -137,12 +142,14 @@ public class ProductController {
     }
 
     @PutMapping("/img")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> setMainProductImage(@RequestParam Long productId, @RequestParam Integer mainImageId){
         productService.updateMainProductImage(productId, mainImageId + ".jpg");
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
 
     @PostMapping("/img")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> addAllProductImages(@RequestParam Long productId, @RequestParam Integer mainImageId, @RequestParam MultipartFile[] images){
         String message = "";
         LinkedList<String> fileNames = new LinkedList<>();
@@ -162,6 +169,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/img/delete/{productId}/{imageId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteProductImage(@PathVariable Long productId, @PathVariable Integer imageId){
         productService.deleteProductImage(productId, imageId);
         return ResponseEntity.status(HttpStatus.OK).body("success");
