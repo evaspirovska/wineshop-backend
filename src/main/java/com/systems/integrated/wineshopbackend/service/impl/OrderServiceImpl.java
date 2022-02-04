@@ -6,6 +6,8 @@ import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO;
 import com.systems.integrated.wineshopbackend.models.orders.Order;
 import com.systems.integrated.wineshopbackend.models.orders.ProductInOrder;
+import com.systems.integrated.wineshopbackend.models.products.Product;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ProductInShoppingCart;
 import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
 import com.systems.integrated.wineshopbackend.models.users.Postman;
 import com.systems.integrated.wineshopbackend.models.users.User;
@@ -32,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private final ShoppingCartJPARepository shoppingCartJPARepository;
     private final ProductInShoppingCartJPARepository productInShoppingCartJPARepository;
     private final PostmanJPARepository postmanJPARepository;
+    private final ProductJPARepository productJPARepository;
 
     @Override
     public List<Order> getOrders(String username) {
@@ -48,6 +51,13 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new UsernameNotFoundException(orderDto.getUsername()));
         ShoppingCart shoppingCart = shoppingCartJPARepository.findByUser_Id(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("No products in shopping cart!"));
+
+        for (ProductInShoppingCart productInShoppingCart : shoppingCart.getProductsInShoppingCart()) {
+            Product product = productJPARepository.getById(productInShoppingCart.getProduct().getId());
+            int currentProductQuantity = product.getQuantity();
+            product.setQuantity(currentProductQuantity-productInShoppingCart.getQuantity());
+            productJPARepository.save(product);
+        }
         Order order = createOrder(orderDto, user);
         order.setOrderStatus(OrderStatus.CREATED);
         orderJPARepository.save(order);

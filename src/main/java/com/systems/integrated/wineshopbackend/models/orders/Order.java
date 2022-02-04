@@ -69,10 +69,10 @@ public class Order {
                     productDTO.getCategoryId(),
                     productDTO.getProductTitle(),
                     productDTO.getProductDescriptionHTML(),
+                    productDTO.getQuantity(),
                     productDTO.getPriceInMKD(),
                     productDTO.getAttributeIdAndValueMap(),
-                    product.getDateCreated(),
-                    product.getQuantity()
+                    product.getDateCreated()
             );
             responseProductsInOrder.add(responseProductInSomethingDTO);
         }

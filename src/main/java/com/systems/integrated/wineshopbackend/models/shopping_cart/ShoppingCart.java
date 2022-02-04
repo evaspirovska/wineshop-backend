@@ -54,10 +54,10 @@ public class ShoppingCart {
                     productDTO.getCategoryId(),
                     productDTO.getProductTitle(),
                     productDTO.getProductDescriptionHTML(),
+                    product.getQuantity(),
                     productDTO.getPriceInMKD(),
                     productDTO.getAttributeIdAndValueMap(),
-                    product.getDateCreated(),
-                    product.getQuantity()
+                    product.getDateCreated()
             );
             responseProductsInCart.add(responseProductInSomethingDTO);
         }

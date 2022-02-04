@@ -24,6 +24,8 @@ public class ResponseProductInSomethingDTO {
 
     private final String productDescriptionHTML;
 
+    private final int quantity;
+
     @NotNull
     @NotEmpty
     private final Double priceInMKD;
@@ -31,6 +33,4 @@ public class ResponseProductInSomethingDTO {
     private final Map<Long, String> attributeIdAndValueMap;
 
     private final LocalDateTime dateCreated;
-
-    private final int quantity;
 }
