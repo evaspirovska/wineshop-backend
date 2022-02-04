@@ -51,28 +51,32 @@ public class ProductServiceImpl implements ProductService {
             boolean priceInRange = product.getPriceInMKD() >= priceFrom && product.getPriceInMKD() <= priceTo;
             AtomicBoolean attributesInRange = new AtomicBoolean(true);
             if(attributeIdAndValues != null){
-                attributeIdAndValues.forEach((attrId, values) -> {
+                List<Long> keys = new ArrayList<>(attributeIdAndValues.keySet());
+                for (long id : keys) {
                     Attribute currentAttribute = attributeRepository
-                            .findById(attrId)
-                            .orElseThrow(() -> new EntityNotFoundException("Attribute with id " + attrId + " not found!"));
+                            .findById(id)
+                            .orElseThrow(() -> new EntityNotFoundException("Attribute with id " + id + " not found!"));
                     String productAttributeValue = product.getValueForProductAttribute().get(currentAttribute);
-                    if(productAttributeValue == null){
+                    if (productAttributeValue == null) {
                         attributesInRange.set(false);
-                    }
-                    else if(currentAttribute.isNumeric()){
-                        double[] fromToValues = Arrays.stream(values.split("-")).mapToDouble(Double::parseDouble).toArray();
+                        break;
+                    } else if (currentAttribute.isNumeric()) {
+                        double[] fromToValues = Arrays.stream(attributeIdAndValues.get(id).split("-")).mapToDouble(Double::parseDouble).toArray();
                         Arrays.sort(fromToValues);
-                        if(
+                        if (
                                 !(fromToValues[0] <= Double.parseDouble(productAttributeValue)
-                                && fromToValues[1] >= Double.parseDouble(productAttributeValue))
-                        )
+                                        && fromToValues[1] >= Double.parseDouble(productAttributeValue))
+                        ) {
                             attributesInRange.set(false);
-                    }
-                    else{
-                        attributesInRange.set(Arrays.stream(values.split("-"))
+                            break;
+                        }
+                    } else {
+                        attributesInRange.set(Arrays.stream(attributeIdAndValues.get(id).split("-"))
                                 .anyMatch(productAttributeValue::equalsIgnoreCase));
+                        if(!attributesInRange.get())
+                            break;
                     }
-                });
+                }
             }
             if(categoryId == -1)
                 return priceInRange && attributesInRange.get();
