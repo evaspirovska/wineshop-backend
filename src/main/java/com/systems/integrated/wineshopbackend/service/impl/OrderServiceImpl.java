@@ -69,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
         for (ProductInShoppingCart productInShoppingCart : shoppingCart.getProductsInShoppingCart()) {
             Product product = productJPARepository.getById(productInShoppingCart.getProduct().getId());
             int currentProductQuantity = product.getQuantity();
-            product.setQuantity(currentProductQuantity-productInShoppingCart.getQuantity());
+            product.setQuantity(currentProductQuantity - productInShoppingCart.getQuantity());
             productJPARepository.save(product);
         }
         Order order = createOrder(orderDto, user);
@@ -121,7 +121,6 @@ public class OrderServiceImpl implements OrderService {
                 .dateCreated(LocalDateTime.now())
                 .build()));
         this.productInOrderJPARepository.saveAll(productsInOrder);
-//        shoppingCart.getProductsInShoppingCart().removeAll(productsInShoppingCart);
         this.productInShoppingCartJPARepository.deleteAllByShoppingCart(shoppingCart);
         this.shoppingCartJPARepository.save(shoppingCart);
         return productsInOrder;

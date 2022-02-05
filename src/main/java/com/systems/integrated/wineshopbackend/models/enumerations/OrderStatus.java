@@ -1,5 +1,5 @@
 package com.systems.integrated.wineshopbackend.models.enumerations;
 
 public enum OrderStatus {
-    CREATED, WAITING, RECIEVED, DELIVERED
+    CREATED, IN_PROGRESS, DELIVERED
 }

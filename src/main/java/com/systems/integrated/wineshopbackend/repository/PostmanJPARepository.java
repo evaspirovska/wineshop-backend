@@ -10,5 +10,8 @@ import java.util.Optional;
 @Repository
 public interface PostmanJPARepository extends JpaRepository<Postman, Long> {
     Optional<List<Postman>> findAllByCity(String city);
+
     Postman findPostmenByUser_Id(Long id);
 }
+
+

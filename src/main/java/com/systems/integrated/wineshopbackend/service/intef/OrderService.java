@@ -9,10 +9,14 @@ import java.util.List;
 
 public interface OrderService {
     List<Order> getOrders(String username);
+
     List<Order> getAllOrders();
+
     List<Order> getOrdersByPostman(String postmanUsername);
+
     Order makeOrder(OrderDto orderDto);
+
     ResponseOrderDTO convertToDto(Order order);
-    Order getOrderById(Long id);
+
     Order changeOrderStatus(UpdateOrderStatusDTO updateOrderStatusDTO);
 }
