@@ -35,4 +35,8 @@ public class Postman {
     public void updateCount() {
         this.ordersToDeliver++;
     }
+
+    public void decreaseOrderCount() {
+        this.ordersToDeliver--;
+    }
 }

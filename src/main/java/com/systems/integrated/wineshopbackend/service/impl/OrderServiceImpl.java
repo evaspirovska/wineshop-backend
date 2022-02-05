@@ -4,6 +4,7 @@ import com.systems.integrated.wineshopbackend.models.enumerations.OrderStatus;
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO;
+import com.systems.integrated.wineshopbackend.models.orders.DTO.UpdateOrderStatusDTO;
 import com.systems.integrated.wineshopbackend.models.orders.Order;
 import com.systems.integrated.wineshopbackend.models.orders.ProductInOrder;
 import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
@@ -42,6 +43,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getAllOrders() {
+        return orderJPARepository.findAll();
+    }
+
+    @Override
+    public List<Order> getOrdersByPostman(String postmanUsername) {
+        User postman = userJPARepository.findUserByUsername(postmanUsername)
+                .orElseThrow(() -> new UsernameNotFoundException(postmanUsername));
+        return this.orderJPARepository.findAllByPostman(postman);
+    }
+
+
+    @Override
     public Order makeOrder(OrderDto orderDto) {
 
         User user = userJPARepository.findUserByUsername(orderDto.getUsername())
@@ -59,6 +73,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseOrderDTO convertToDto(Order order) {
         return Order.convertToDto(order);
+    }
+
+    @Override
+    public Order changeOrderStatus(UpdateOrderStatusDTO updateOrderStatusDTO) {
+        Order order = orderJPARepository.findById(updateOrderStatusDTO.getOrderId()).orElseThrow(() ->
+                new EntityNotFoundException("No order with id " + updateOrderStatusDTO.getOrderId()));
+        Postman postman = postmanJPARepository.findPostmenByUser_Id(order.getPostman().getId());
+        if (updateOrderStatusDTO.getOrderStatus().equals(OrderStatus.DELIVERED)) {
+            postman.decreaseOrderCount();
+            postmanJPARepository.save(postman);
+        }
+        order.setOrderStatus(updateOrderStatusDTO.getOrderStatus());
+        orderJPARepository.save(order);
+        return order;
     }
 
     private Order createOrder(OrderDto orderDto, User user) {
