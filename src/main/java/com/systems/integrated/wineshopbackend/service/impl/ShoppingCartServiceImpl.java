@@ -51,11 +51,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void deleteProductFromShoppingCart(Long id, String username) {
 
-//        ShoppingCart shoppingCart = this.getShoppingCart(username);
+        ShoppingCart shoppingCart = this.getShoppingCart(username);
         ProductInShoppingCart productInShoppingCart = productInShoppingCartJPARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("product in shopping cart with id: " + id.toString() + "not found!"));
-//        productInShoppingCartJPARepository.deleteAllByIdAndShoppingCart(id, shoppingCart);
-        productInShoppingCartJPARepository.delete(productInShoppingCart);
+        productInShoppingCartJPARepository.deleteAllByIdAndShoppingCart(id, shoppingCart);
+//        productInShoppingCartJPARepository.delete(productInShoppingCart);
     }
 
     @Override

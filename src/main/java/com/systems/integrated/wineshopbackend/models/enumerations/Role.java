@@ -1,4 +1,4 @@
-package com.systems.integrated.wineshopbackend.models.users;
+package com.systems.integrated.wineshopbackend.models.enumerations;
 
 public enum Role {
     ROLE_USER,

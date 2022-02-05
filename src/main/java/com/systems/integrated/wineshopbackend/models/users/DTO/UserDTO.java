@@ -1,6 +1,6 @@
 package com.systems.integrated.wineshopbackend.models.users.DTO;
 
-import com.systems.integrated.wineshopbackend.models.users.Role;
+import com.systems.integrated.wineshopbackend.models.enumerations.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
