@@ -24,9 +24,22 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllOrders() {
+        List<ResponseOrderDTO> responseOrderDTOS;
+        try {
+            List<Order> orders = orderService.getAllOrders();
+            responseOrderDTOS = orders.stream().map(Order::convertToDto).collect(Collectors.toList());
+        } catch (UsernameNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(responseOrderDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{username}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<?> getOrders(@RequestParam String username) {
+    public ResponseEntity<?> getOrders(@PathVariable String username) {
 
         List<Order> orders;
         List<ResponseOrderDTO> responseOrderDTOS;
@@ -39,20 +52,9 @@ public class OrderController {
         return new ResponseEntity<>(responseOrderDTOS, HttpStatus.OK);
     }
 
-    @GetMapping("/adminOrders")
-    public ResponseEntity<?> getAllOrders() {
-        List<ResponseOrderDTO> responseOrderDTOS;
-        try {
-            List<Order> orders = orderService.getAllOrders();
-            responseOrderDTOS = orders.stream().map(Order::convertToDto).collect(Collectors.toList());
-        } catch (UsernameNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(responseOrderDTOS, HttpStatus.OK);
-    }
-
-    @GetMapping("/postmanOrders")
-    public ResponseEntity<?> getOrdersByPostman(@RequestParam String postman) {
+    @GetMapping("/postman/{postman}")
+    @PreAuthorize("hasRole('POSTMAN')")
+    public ResponseEntity<?> getOrdersByPostman(@PathVariable String postman) {
 
         List<Order> orders;
         List<ResponseOrderDTO> responseOrderDTOS;
@@ -63,11 +65,6 @@ public class OrderController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(responseOrderDTOS, HttpStatus.OK);
-    }
-
-    @GetMapping("/createOrder")
-    public ResponseEntity<?> createOrder() {
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/makeOrder")
@@ -84,6 +81,7 @@ public class OrderController {
     }
 
     @PutMapping("/update-status")
+    @PreAuthorize("hasAnyRole('POSTMAN', 'ADMIN')")
     public ResponseEntity<?> updateOrderStatus(@RequestBody UpdateOrderStatusDTO updateOrderStatusDto) {
         ResponseOrderDTO responseOrderDTO;
         try {
