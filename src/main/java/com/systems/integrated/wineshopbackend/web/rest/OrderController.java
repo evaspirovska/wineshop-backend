@@ -12,6 +12,7 @@ import com.systems.integrated.wineshopbackend.service.intef.PostmanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class OrderController {
     private final PostmanService postmanService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> getOrders(@RequestParam String username) {
 
         List<Order> orders;
@@ -74,6 +76,7 @@ public class OrderController {
     }
 
     @PostMapping("/makeOrder")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> makeOrder(@RequestBody OrderDto orderDto) {
 
         try {

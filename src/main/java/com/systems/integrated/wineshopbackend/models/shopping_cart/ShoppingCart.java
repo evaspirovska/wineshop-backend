@@ -30,12 +30,16 @@ public class ShoppingCart {
     @OneToOne
     private User user;
 
-    @OneToMany(mappedBy = "shoppingCart", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "shoppingCart", fetch = FetchType.EAGER,
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<ProductInShoppingCart> productsInShoppingCart;
 
     private LocalDateTime dateCreated;
 
-//    private Double totalPrice;
+    @PreRemove
+    private void preRemove() {
+        setUser(null);
+    }
 
     public ShoppingCart(User user) {
         this.user = user;
@@ -54,10 +58,10 @@ public class ShoppingCart {
                     productDTO.getCategoryId(),
                     productDTO.getProductTitle(),
                     productDTO.getProductDescriptionHTML(),
+                    product.getQuantity(),
                     productDTO.getPriceInMKD(),
                     productDTO.getAttributeIdAndValueMap(),
-                    product.getDateCreated(),
-                    product.getQuantity()
+                    product.getDateCreated()
             );
             responseProductsInCart.add(responseProductInSomethingDTO);
         }

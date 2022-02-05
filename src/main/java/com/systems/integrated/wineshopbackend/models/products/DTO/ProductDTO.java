@@ -25,6 +25,8 @@ public class ProductDTO {
 
     private final String productDescriptionHTML;
 
+    private final int quantity;
+
     @NotNull
     @NotEmpty
     private final Double priceInMKD;

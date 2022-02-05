@@ -98,6 +98,7 @@ public class ProductServiceImpl implements ProductService {
                 .category(category)
                 .productTitle(productDTO.getProductTitle())
                 .productDescriptionHTML(productDTO.getProductDescriptionHTML())
+                .quantity(productDTO.getQuantity())
                 .priceInMKD(productDTO.getPriceInMKD())
                 .pathToMainProductIMG("none")
                 .pathsToProductIMGs(new LinkedList<>())
@@ -117,7 +118,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = findById(productDTO.getId());
         product.setProductTitle(productDTO.getProductTitle());
         product.setProductDescriptionHTML(productDTO.getProductDescriptionHTML());
+        product.setQuantity(productDTO.getQuantity());
         product.setPriceInMKD(productDTO.getPriceInMKD());
+
         if (!productDTO.getId().equals(product.getCategory().getId())) {
             Category category = categoryRepository.findById(productDTO.getCategoryId())
                     .orElseThrow(() -> new EntityNotFoundException("Category with id " + productDTO.getCategoryId() + " not found!"));

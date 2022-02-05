@@ -9,6 +9,7 @@ import com.systems.integrated.wineshopbackend.service.intef.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createNewCategory(@RequestBody CategoryDTO categoryDTO){
         Category category;
         try {
@@ -52,6 +54,7 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO){
         Category category;
         categoryDTO.setId(id);
@@ -65,6 +68,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id){
         categoryService.delete(id);
         return new ResponseEntity<>("Category with id " + id + " deleted.", HttpStatus.OK);

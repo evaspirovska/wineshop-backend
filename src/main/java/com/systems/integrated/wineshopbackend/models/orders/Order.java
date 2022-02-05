@@ -34,7 +34,8 @@ public class Order {
     @ManyToOne
     private User postman;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER,
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     private List<ProductInOrder> productsInOrder;
 
     private LocalDateTime dateCreated;
@@ -61,18 +62,18 @@ public class Order {
 
     public static ResponseOrderDTO convertToDto(Order order) {
         List<ResponseProductInSomethingDTO> responseProductsInOrder = new ArrayList<>();
-        for (ProductInOrder product : order.getProductsInOrder()) {
-            ProductDTO productDTO = Product.convertToDTO(product.getProduct());
+        for (ProductInOrder productInOrder : order.getProductsInOrder()) {
+            ProductDTO productDTO = Product.convertToDTO(productInOrder.getProduct());
             ResponseProductInSomethingDTO responseProductInSomethingDTO = new ResponseProductInSomethingDTO(
-                    product.getId(),
+                    productInOrder.getId(),
                     productDTO.getId(),
                     productDTO.getCategoryId(),
                     productDTO.getProductTitle(),
                     productDTO.getProductDescriptionHTML(),
+                    productInOrder.getQuantity(),
                     productDTO.getPriceInMKD(),
                     productDTO.getAttributeIdAndValueMap(),
-                    product.getDateCreated(),
-                    product.getQuantity()
+                    productInOrder.getDateCreated()
             );
             responseProductsInOrder.add(responseProductInSomethingDTO);
         }
