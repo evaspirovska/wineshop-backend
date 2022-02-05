@@ -55,6 +55,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ProductInShoppingCart productInShoppingCart = productInShoppingCartJPARepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("product in shopping cart with id: " + id.toString() + "not found!"));
         productInShoppingCartJPARepository.deleteAllByIdAndShoppingCart(id, shoppingCart);
+//        productInShoppingCartJPARepository.delete(productInShoppingCart);
     }
 
     @Override

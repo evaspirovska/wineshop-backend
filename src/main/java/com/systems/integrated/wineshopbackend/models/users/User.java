@@ -1,5 +1,6 @@
 package com.systems.integrated.wineshopbackend.models.users;
 
+import com.systems.integrated.wineshopbackend.models.enumerations.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,9 +42,4 @@ public class User {
     private List<AuthToken> authTokens;
 
     private LocalDateTime dateCreated;
-
-    @PreRemove
-    private void preRemove() {
-        authTokens.forEach(token -> token.setUser(null));
-    }
 }

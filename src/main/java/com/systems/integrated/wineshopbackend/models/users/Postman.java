@@ -18,7 +18,7 @@ public class Postman {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToOne
     private User user;
 
     private String city;
@@ -34,5 +34,9 @@ public class Postman {
 
     public void updateCount() {
         this.ordersToDeliver++;
+    }
+
+    public void decreaseOrderCount() {
+        this.ordersToDeliver--;
     }
 }

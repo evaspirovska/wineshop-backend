@@ -1,7 +1,7 @@
 package com.systems.integrated.wineshopbackend.service.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.systems.integrated.wineshopbackend.models.users.Role;
+import com.systems.integrated.wineshopbackend.models.enumerations.Role;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;

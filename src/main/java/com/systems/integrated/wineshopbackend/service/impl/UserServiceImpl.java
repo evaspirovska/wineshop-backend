@@ -4,7 +4,7 @@ import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundEx
 import com.systems.integrated.wineshopbackend.models.users.AuthToken;
 import com.systems.integrated.wineshopbackend.models.users.DTO.UserDTO;
 import com.systems.integrated.wineshopbackend.models.users.Postman;
-import com.systems.integrated.wineshopbackend.models.users.Role;
+import com.systems.integrated.wineshopbackend.models.enumerations.Role;
 import com.systems.integrated.wineshopbackend.models.users.User;
 import com.systems.integrated.wineshopbackend.repository.PostmanJPARepository;
 import com.systems.integrated.wineshopbackend.repository.UserJPARepository;

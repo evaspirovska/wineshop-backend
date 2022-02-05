@@ -30,16 +30,10 @@ public class ShoppingCart {
     @OneToOne
     private User user;
 
-    @OneToMany(mappedBy = "shoppingCart", fetch = FetchType.EAGER,
-            cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "shoppingCart", fetch = FetchType.EAGER)
     private List<ProductInShoppingCart> productsInShoppingCart;
 
     private LocalDateTime dateCreated;
-
-    @PreRemove
-    private void preRemove() {
-        setUser(null);
-    }
 
     public ShoppingCart(User user) {
         this.user = user;
