@@ -86,7 +86,7 @@ public class OrderController {
                         );
                 return new ResponseEntity<>(peqDTO, HttpStatus.OK);
             }
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.OK);
         }
     }
 

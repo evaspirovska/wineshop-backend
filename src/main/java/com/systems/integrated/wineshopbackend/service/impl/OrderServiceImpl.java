@@ -78,6 +78,8 @@ public class OrderServiceImpl implements OrderService {
             int currentProductQuantity = product.getQuantity();
             product.setQuantity(currentProductQuantity - productInShoppingCart.getQuantity());
             productJPARepository.save(product);
+            checkAndUpdateOtherCarts(shoppingCart, product); //namali kvantitet ili izbrishi proizvodi vo tugji
+            //shopping carts ako vo magacin ima pomalku od tekovnite kvantiteti vo tugjite shopping carts
         }
         Order order = createOrder(orderDto, user);
         order.setOrderStatus(OrderStatus.CREATED);
@@ -131,5 +133,23 @@ public class OrderServiceImpl implements OrderService {
         this.productInShoppingCartJPARepository.deleteAllByShoppingCart(shoppingCart);
         this.shoppingCartJPARepository.save(shoppingCart);
         return productsInOrder;
+    }
+
+    private void checkAndUpdateOtherCarts(ShoppingCart shoppingCart, Product product){
+        shoppingCartJPARepository.findAll().forEach(sp -> {
+            if(!sp.getId().equals(shoppingCart.getId())) {
+                ProductInShoppingCart pisc = sp.getProductsInShoppingCart().stream().filter(p ->
+                        p.getProduct().getId().equals(product.getId())
+                ).findFirst().orElse(null);
+                if (pisc != null && product.getQuantity() < pisc.getQuantity()) {
+                    if (product.getQuantity() == 0) {
+                        productInShoppingCartJPARepository.deleteAllByIdAndShoppingCart(pisc.getId(), sp);
+                    } else {
+                        pisc.setQuantity(product.getQuantity());
+                        productInShoppingCartJPARepository.save(pisc);
+                    }
+                }
+            }
+        });
     }
 }
