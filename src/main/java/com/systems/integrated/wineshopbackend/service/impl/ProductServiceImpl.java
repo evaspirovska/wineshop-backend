@@ -6,10 +6,12 @@ import com.systems.integrated.wineshopbackend.models.products.Attribute;
 import com.systems.integrated.wineshopbackend.models.products.Category;
 import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 import com.systems.integrated.wineshopbackend.models.products.Product;
+import com.systems.integrated.wineshopbackend.models.shopping_cart.ShoppingCart;
 import com.systems.integrated.wineshopbackend.repository.AttributeJPARepository;
 import com.systems.integrated.wineshopbackend.repository.CategoryJPARepository;
 import com.systems.integrated.wineshopbackend.repository.ProductJPARepository;
 import com.systems.integrated.wineshopbackend.service.intef.ProductService;
+import com.systems.integrated.wineshopbackend.service.intef.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductJPARepository productRepository;
     private final CategoryJPARepository categoryRepository;
     private final AttributeJPARepository attributeRepository;
+    private final ShoppingCartService shoppingCartService;
 
 
     @Override
@@ -210,5 +213,17 @@ public class ProductServiceImpl implements ProductService {
         Product product = findById(id);
         product.getPathsToProductIMGs().add(filename);
         productRepository.save(product);
+    }
+
+    @Override
+    public boolean checkProductQuantity(Long id, int quantity, String username) {
+        ShoppingCart sp = shoppingCartService.getShoppingCart(username);
+        if(
+                sp.getProductsInShoppingCart().stream().filter(p -> p.getProduct().getId().equals(id)).findFirst().orElse(null) != null &&
+                        sp.getProductsInShoppingCart().stream().filter(p -> p.getProduct().getId().equals(id)).findFirst().get().getQuantity()+quantity >
+                                findById(id).getQuantity()
+        )
+            return false;
+        return findById(id).getQuantity()>=quantity;
     }
 }
