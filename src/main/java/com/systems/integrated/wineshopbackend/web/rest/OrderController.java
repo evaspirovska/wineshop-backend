@@ -1,11 +1,15 @@
 package com.systems.integrated.wineshopbackend.web.rest;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
+import com.systems.integrated.wineshopbackend.models.exceptions.NotEnoughQuantityException;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.UpdateOrderStatusDTO;
 import com.systems.integrated.wineshopbackend.models.orders.Order;
+import com.systems.integrated.wineshopbackend.models.products.DTO.ProductEnoughQuantityDTO;
+import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.service.intef.OrderService;
+import com.systems.integrated.wineshopbackend.service.intef.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     private final OrderService orderService;
+    private final ProductService productService;
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
@@ -70,12 +75,17 @@ public class OrderController {
     @PostMapping("/makeOrder")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> makeOrder(@RequestBody OrderDto orderDto) {
-
         try {
             Order order = orderService.makeOrder(orderDto);
             ResponseOrderDTO responseOrderDTO = Order.convertToDto(order);
             return new ResponseEntity<>(responseOrderDTO, HttpStatus.OK);
-        } catch (UsernameNotFoundException | EntityNotFoundException ex) {
+        } catch (UsernameNotFoundException | EntityNotFoundException | NotEnoughQuantityException ex) {
+            if(ex instanceof NotEnoughQuantityException){
+                ProductEnoughQuantityDTO peqDTO = new ProductEnoughQuantityDTO(
+                        false, Product.convertToDTO(productService.findById(((NotEnoughQuantityException) ex).getProductId()))
+                        );
+                return new ResponseEntity<>(peqDTO, HttpStatus.OK);
+            }
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

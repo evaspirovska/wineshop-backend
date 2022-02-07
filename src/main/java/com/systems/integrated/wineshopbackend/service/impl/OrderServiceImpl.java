@@ -2,6 +2,7 @@ package com.systems.integrated.wineshopbackend.service.impl;
 
 import com.systems.integrated.wineshopbackend.models.enumerations.OrderStatus;
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
+import com.systems.integrated.wineshopbackend.models.exceptions.NotEnoughQuantityException;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.OrderDto;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.ResponseOrderDTO;
 import com.systems.integrated.wineshopbackend.models.orders.DTO.UpdateOrderStatusDTO;
@@ -60,12 +61,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order makeOrder(OrderDto orderDto) {
-
         User user = userJPARepository.findUserByUsername(orderDto.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException(orderDto.getUsername()));
         ShoppingCart shoppingCart = shoppingCartJPARepository.findByUser_Id(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("No products in shopping cart!"));
 
+        for (ProductInShoppingCart productInShoppingCart : shoppingCart.getProductsInShoppingCart()) {
+            Product product = productJPARepository.getById(productInShoppingCart.getProduct().getId());
+            int currentProductQuantity = product.getQuantity();
+            if(currentProductQuantity - productInShoppingCart.getQuantity() < 0){
+                throw new NotEnoughQuantityException("One or more products are not available.", product.getId());
+            }
+        }
         for (ProductInShoppingCart productInShoppingCart : shoppingCart.getProductsInShoppingCart()) {
             Product product = productJPARepository.getById(productInShoppingCart.getProduct().getId());
             int currentProductQuantity = product.getQuantity();
@@ -103,12 +110,12 @@ public class OrderServiceImpl implements OrderService {
 
         List<Postman> postmanList = this.postmanJPARepository.findAllByCity(orderDto.getCity())
                 .orElseThrow(() -> new EntityNotFoundException("No postman in city " + orderDto.getCity()));
-        Postman postman = postmanList.stream().min(Comparator.comparing(Postman::getOrdersToDeliver)).get();
+        Postman postman = postmanList.stream().min(Comparator.comparing(Postman::getOrdersToDeliver)).orElseThrow(
+                () -> new EntityNotFoundException("Postman not found!")
+        );
         postman.updateCount();
         this.postmanJPARepository.save(postman);
-        Order order =
-                new Order(user, postman.getUser(), orderDto.getCity(), orderDto.getTelephone(), orderDto.getAddress());
-        return order;
+        return new Order(user, postman.getUser(), orderDto.getCity(), orderDto.getTelephone(), orderDto.getAddress());
     }
 
     private List<ProductInOrder> addProductsToOrder(Order order, ShoppingCart shoppingCart) {

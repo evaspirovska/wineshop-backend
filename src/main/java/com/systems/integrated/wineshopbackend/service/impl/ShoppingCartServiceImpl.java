@@ -45,7 +45,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         User user = userJPARepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
-        return this.build(productInShoppingCartDTO, user).getShoppingCart();
+        ShoppingCart shoppingCart = shoppingCartJPARepository.findByUser_Id(user.getId()).orElseThrow(() -> new EntityNotFoundException("Shopping cart not found!"));
+        ProductInShoppingCart pisc = shoppingCart.getProductsInShoppingCart().stream()
+                .filter(p -> p.getProduct().getId().equals(productInShoppingCartDTO.getProductId()))
+                .findFirst().orElse(null);
+        if(pisc==null)
+            return this.build(productInShoppingCartDTO, user).getShoppingCart();
+        else{
+            pisc.setQuantity(pisc.getQuantity() + 1);
+            productInShoppingCartJPARepository.save(pisc);
+            return pisc.getShoppingCart();
+        }
     }
 
     @Override

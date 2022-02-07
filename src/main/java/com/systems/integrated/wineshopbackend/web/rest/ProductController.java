@@ -1,6 +1,9 @@
 package com.systems.integrated.wineshopbackend.web.rest;
 
 import com.systems.integrated.wineshopbackend.models.exceptions.EntityNotFoundException;
+import com.systems.integrated.wineshopbackend.models.products.DTO.CheckQuantityDTO;
+import com.systems.integrated.wineshopbackend.models.products.DTO.ProductEnoughQuantityDTO;
+import com.systems.integrated.wineshopbackend.models.products.DTO.ResponseProductInSomethingDTO;
 import com.systems.integrated.wineshopbackend.models.products.Product;
 import com.systems.integrated.wineshopbackend.models.products.DTO.ProductDTO;
 import com.systems.integrated.wineshopbackend.service.intef.ImageStorageService;
@@ -11,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +56,15 @@ public class ProductController {
     public ResponseEntity<?> getAllProductsByCategoryId(@PathVariable Long id){
         List<ProductDTO> products = productService.findAllByCategoryId(id).stream().map(Product::convertToDTO).collect(Collectors.toList());
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @PostMapping("/check-quantity")
+    public ResponseEntity<?> checkProductQuantity(@RequestBody CheckQuantityDTO cqDTO, Authentication authentication){
+        ProductEnoughQuantityDTO peqDTO = new ProductEnoughQuantityDTO(
+                productService.checkProductQuantity(
+                        cqDTO.getProductId(), cqDTO.getQuantity(), authentication.getName()
+                ), Product.convertToDTO(productService.findById(cqDTO.getProductId())));
+        return new ResponseEntity<>(peqDTO, HttpStatus.OK);
     }
 
     @GetMapping("/filter")

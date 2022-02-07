@@ -19,6 +19,8 @@ public interface ProductService {
 
     Product update(ProductDTO productDTO);
 
+    boolean checkProductQuantity(Long id, int quantity, String username);
+
     void delete(Long id);
 
     void updateProductAttributesForCategoryId(Long categoryId);
