@@ -60,6 +60,9 @@ public class ProductController {
 
     @PostMapping("/check-quantity")
     public ResponseEntity<?> checkProductQuantity(@RequestBody CheckQuantityDTO cqDTO, Authentication authentication){
+        if (authentication == null) {
+            return new ResponseEntity<>("Unauthenticated", HttpStatus.OK);
+        }
         ProductEnoughQuantityDTO peqDTO = new ProductEnoughQuantityDTO(
                 productService.checkProductQuantity(
                         cqDTO.getProductId(), cqDTO.getQuantity(), authentication.getName()
